@@ -11,17 +11,17 @@ var qs = require("querystring");
 var url_name = function (nickname, key) {
   return `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${urlencode(nickname)}?api_key=${key}`;
 };
-
-
 var url_matchlist = function (userid, key) {
   return `https://kr.api.riotgames.com/lol/match/v4/matchlists/by-account/${urlencode(userid)}?api_key=${key}`;
 };
+var url_matchlist_begin = function(userid, index, key){
+  return `https://kr.api.riotgames.com/lol/match/v4/matchlists/by-account/${urlencode(userid)}?beginIndex=${index}&?api_key=${key}`;
+}
 
 var champarr = [];
 for (var i = 0; i < 900; i++) {
   champarr.push([]);
 }
-
 {
   champarr[120][0] = "헤카림";
   champarr[120][1] = 0;
@@ -1206,10 +1206,14 @@ for (var i = 0; i < 900; i++) {
   champarr[268][4] = 0;
   champarr[268][5] = 0;
   champarr[268][6] = 0;
-
 }
 
-
+let show_champion_list = "";
+function mlist(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    show_champion_list = show_champion_list + "<h2>Champion : " + champarr[arr[i][0]][0] + "/ 횟수 : " + arr[i][1] + "</h2>";
+  }
+}
 
 var nickname;
 app.get('/', function (req, res) {
@@ -1219,37 +1223,35 @@ app.get('/', function (req, res) {
 });
 
 app.get('/userinfo', function (req, res) {
-  request(url_name(nickname, key), function (err, re, body) {
-    var userinfo = body;
-    userinfo = JSON.parse(userinfo);
-    request(url_matchlist(userinfo.accountId, key), function (err, re2, body2) {
-      var matchlist = body2;
-      matchlist2 = JSON.parse(matchlist);
-      var tmparr = [];
-      var tmparr2 = []
-      for (var i = 0; i < 500; i++) {
-        tmparr[i] = 0;
-      }
-      for (var i = 0; i < matchlist2.matches.length; i++) {
-        tmparr[matchlist2.matches[i].champion] = tmparr[matchlist2.matches[i].champion] + 1;
-      }
-      for (var i = 0; i < 500; i++) {
-        if (tmparr[i] != 0) {
-          tmparr2.push([i, tmparr[i]])
-        }
-      }
-      function mlist(arr) {
-        var tmp = "";
-        for (var i = 0; i < arr.length; i++) {
-          tmp = tmp + "<h2>Champion : " + champarr[arr[i][0]][0] + "/ 횟수 : " + arr[i][1] + "</h2>";
-        }
-        return tmp
-      }
-      var temp = `
-  <!doctype html>
-<html>
+  request(url_name(nickname, key), function (err, res_name, body_name) {
+    const userinfo = JSON.parse(body_name);
+    request(url_matchlist(userinfo.accountId, key), function (err, res_match, body_match) {
+      let matchlist = JSON.parse(body_match);
+      let total = matchlist.totalGames;
+      var total_champ_arr = [];
+      var used_champ_arr = [];
+      for (var i = 0; i < 900; i++) total_champ_arr[i] = 0;
+      for (var i = 0; i < matchlist.matches.length; i++) total_champ_arr[matchlist.matches[i].champion] += 1;
+      for (var i = 0; i < 900; i++) if (total_champ_arr[i] != 0) used_champ_arr.push([i, total_champ_arr[i]]);
+      
 
-<head>
+      used_champ_arr.sort(function (a, b) {
+        return b[1] - a[1];
+      });
+      mlist(used_champ_arr);
+      
+      /*for (var i = 100; i < total; i += 100) {
+        request(url_matchlist_begin(userinfo.accountId, i, key), function(err, res_match_begin, body_match_begin){
+
+        })
+      }*/
+
+
+      var for_user_data = `
+    <!doctype html>
+    <html>
+    
+    <head>
     <title>YOUARE.GG</title>
     <meta charset="utf-8">
     <style>
@@ -1261,22 +1263,21 @@ app.get('/userinfo', function (req, res) {
         text-decoration: none;
       }
     </style>
-  </head>
+    </head>
+    
+    <body>
+    <h1><a href="/">YOUARE.GG</a></h1>
+    <h2>소환사레벨${userinfo.summonerLevel}</h2>
+    ${show_champion_list}
+    </body>
+    </html>
+    `;
+      res.end(for_user_data);
+    }); // requset matchlist
+  }); // requeset accountId
 
-<body>
-  <h1><a href="/">YOUARE.GG</a></h1>
-  <h2>${userinfo.id}</h2>
-  <h2>${userinfo.summonerLevel}</h2>
-  ${mlist(tmparr2)}
-</body>
-
-</html>
-  `;
-      res.end(temp);
-
-    })
-  });
 });
+
 app.post('/search_process', function (req, res) {
   var body = '';
   req.on('data', function (data) {
@@ -1285,10 +1286,10 @@ app.post('/search_process', function (req, res) {
   req.on('end', function () {
     var post = qs.parse(body);
     nickname = post.nickname;
-    res.writeHead(302, { Location: '/userinfo' });
-    res.end();
+    res.redirect('/userinfo');
   });
 });
-app.listen(3001, function () {
+
+app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 });
