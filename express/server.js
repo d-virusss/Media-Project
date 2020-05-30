@@ -4,7 +4,9 @@ var url = require('url');
 var request = require("request");
 var urlencode = require('urlencode');
 var express = require("express");
+var asyncify = require("express-asyncify");
 var app = express();
+var router = asyncify(express.Router());
 var key = "RGAPI-c9680d87-ca09-45c1-bb86-13461a06c71b";
 var qs = require("querystring");
 
@@ -15,16 +17,143 @@ var url_matchlist = function (userid, key) {
   return `https://kr.api.riotgames.com/lol/match/v4/matchlists/by-account/${urlencode(userid)}?api_key=${key}`;
 };
 var url_matchlist_begin = function (userid, index, key) {
-  return `https://kr.api.riotgames.com/lol/match/v4/matchlists/by-account/${urlencode(userid)}?beginIndex=${index}&?api_key=${key}`;
+  return `https://kr.api.riotgames.com/lol/match/v4/matchlists/by-account/${urlencode(userid)}?beginIndex=${index}&api_key=${key}`;
+}
+
+let make_for_user_data = function(used_champ_arr_inf, urlarray_inf){
+  return `
+  <!doctype html>
+  <html>
+
+<head>
+  <title>YOUARE.GG</title>
+  <meta charset="utf-8">
+  <style>
+    body{
+      background-color: rgb(153, 207, 238);
+    }a{
+      color:rgb(86, 240, 219);
+      font-family: unset;
+      text-decoration: none;
+    }.box1{
+      background-color: rgb(153, 207, 238);
+      margin: 10px 10px 30px 10px;
+      height: 450px;
+    }.box2{
+      background-color: rgb(153, 207, 238);
+      margin: 10px 10px 30px 10px;
+      height: 450px;
+    }.box3{
+      background-color: rgb(153, 207, 238);
+      margin: 10px 10px 30px 10px;
+      height: 450px;
+    }.box4{
+      background-color: rgb(153, 207, 238);
+      margin: 10px 10px 30px 10px;
+      height: 450px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="/">YOUARE.GG</a></h1>
+
+  <div class = "box1">
+    <h3> 1. 최근 100 게임 사용 챔피언 그래프 </h3>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+<script type="text/javascript">
+var svg = d3.select(".box1").append("svg")
+  .attr('width', 1600)
+  .attr('height', 400)
+var tmp =[${used_champ_arr_inf}];
+var dataset = [];
+if(tmp.length<40){
+var length = tmp.length;
+}
+else{
+var length = 40;
+}
+for(var i = 0; i<length; i++){
+if((i%2)==1){
+  continue;
+}
+dataset.push([tmp[i], tmp[i+1]])
+
+}
+var ratio = 300/dataset[0][1];
+
+svg.selectAll('rect')
+    .data(dataset)
+    .enter()
+    .append('rect')
+    .attr('x', function(d, i){
+      return i*70+30
+    })
+    .attr('y', function(d){
+      return 330 -d[1]*ratio; 
+    })
+    .attr('width', 50)
+    .attr('height', function(d){
+      return d[1]*ratio;
+    })
+    .attr('fill', 'red');
+var imgdataset = [${urlarray_inf}];
+
+svg.selectAll('image')
+.data(imgdataset)
+.enter()
+.append('image')
+.attr("xlink:href", function(d){return d;})
+.attr('x', function(d, i){
+return i*70+30
+})
+.attr('y', 350)
+.attr('width', 50)
+.attr('height', 50)
+
+
+svg.selectAll('text')
+.data(dataset)
+.enter()
+.append('text')
+.attr('x', function(d, i){
+return i*70+49
+})
+.attr('y',  function(d){
+return 320 -d[1]*ratio; 
+})
+.text(function(d){
+return d[1];
+});
+    
+</script>
+  </div>
+
+  <div class = "box2">
+    <h3> 2. 챔피언으로 유추한 사용자의 성격 </h3>
+  </div>
+
+  <div class = "box3">
+    <h3> 3. 성격을 유추하는데 사용한 지표 그래프 </h3>
+  </div>
+
+  <div class = "box4">
+    <h3> 4. 성격과 어울리는 챔피언 추천 </h3>
+  </div>
+
+</body>
+
+</html>
+  `;
 }
 
 var champarr = [];
-for (var i = 0; i < 900; i++) {
+for (let i = 0; i < 900; i++) {
   champarr.push([]);
 }
 
 {
-champarr[86][0] = "가렌";
+  champarr[86][0] = "가렌";
   champarr[86][1] = "https://opgg-static.akamaized.net/images/lol/champion/Garen.png?image=q_auto,w_140&v=1588915771";
   champarr[86][2] = 0;
   champarr[86][3] = 0;
@@ -1211,7 +1340,7 @@ champarr[86][0] = "가렌";
 
 let show_champion_list = "";
 function mlist(arr) {
-  for (var i = 0; i < arr.length; i++) {
+  for (let i = 0; i < arr.length; i++) {
     show_champion_list = show_champion_list + "<h2>Champion : " + champarr[arr[i][0]][0] + "/ 횟수 : " + arr[i][1] + "</h2>";
     show_champion_list = show_champion_list + "<img src=" + champarr[arr[i][0]][1] + " width=50px height=50px>";
   }
@@ -1220,173 +1349,56 @@ function mlist(arr) {
 var nickname;
 app.get('/', function (req, res) {
   fs.readFile('youaregg.html', 'utf8', function (err, data) {
-    res.end(data);
-  })
+      res.end(data);
+    })
 });
-
 app.get('/userinfo', function (req, res) {
   request(url_name(nickname, key), function (err, res_name, body_name) {
     const userinfo = JSON.parse(body_name);
+    let used_champ_arr = [];
     request(url_matchlist(userinfo.accountId, key), function (err, res_match, body_match) {
       let matchlist = JSON.parse(body_match);
-      let total = matchlist.totalGames;
-      var total_champ_arr = [];
-      var used_champ_arr = [];
-      for (var i = 0; i < 900; i++) total_champ_arr[i] = 0;
-      for (var i = 0; i < matchlist.matches.length; i++) total_champ_arr[matchlist.matches[i].champion] += 1;
-      for (var i = 0; i < 900; i++) if (total_champ_arr[i] != 0) used_champ_arr.push([i, total_champ_arr[i]]);
+      let total = matchlist.totalGames; // 총게임수를 변수 total에 저장
+      let total_champ_arr = [];
+      for (let i = 0; i < 900; i++) total_champ_arr[i] = 0;
+      for (let i = 0; i < matchlist.matches.length; i++) total_champ_arr[matchlist.matches[i].champion] += 1;
+      // 플레이한 챔피언들 카운팅
+      for (let i = 0; i < 900; i++) if (total_champ_arr[i] != 0) used_champ_arr.push([i, total_champ_arr[i]]);
+      // 한 번이라도 카운팅된 챔피언들 정리
 
+      /*for (let i = 100; i < total; i += 100) {
+        request(url_matchlist_begin(userinfo.accountId, i, key), function (err, res_match_begin, body_match_begin) {
+          let matchlist_loop = JSON.parse(body_match_begin);
+          let total = matchlist_loop.totalGames;
+          console.log(total);
+          for (let i = 0; i < matchlist_loop.matches.length; i++) total_champ_arr[matchlist_loop.matches[i].champion] += 1;
+          for (let i = 0; i < 900; i++) if (total_champ_arr[i] != 0) used_champ_arr.push([i, total_champ_arr[i]]);
+          console.log(used_champ_arr);
+        });
+      }*/ // 비동기 함수이므로 
+      
 
       used_champ_arr.sort(function (a, b) {
         return b[1] - a[1];
       });
+      console.log(used_champ_arr[0][1]);
       mlist(used_champ_arr);
-
-      /*for (var i = 100; i < total; i += 100) {
-        request(url_matchlist_begin(userinfo.accountId, i, key), function(err, res_match_begin, body_match_begin){
-
-        })
-      }*/
 
       var resultlength;
 
-      if(used_champ_arr.length>20){
+      if (used_champ_arr.length > 20) {
         resultlength = 20;
       }
-      else{
+      else {
         resultlength = used_champ_arr.length;
       }
 
       var urlarray = []
-      for(var i = 0; i<resultlength; i++){
+      for (let i = 0; i < resultlength; i++) {
         urlarray.push(JSON.stringify(champarr[used_champ_arr[i][0]][1]));
       }
 
-
-      var for_user_data = `
-    <!doctype html>
-    <html>
-  
-  <head>
-    <title>YOUARE.GG</title>
-    <meta charset="utf-8">
-    <style>
-      body{
-        background-color: rgb(153, 207, 238);
-      }a{
-        color:rgb(86, 240, 219);
-        font-family: unset;
-        text-decoration: none;
-      }.box1{
-        background-color: rgb(153, 207, 238);
-        margin: 10px 10px 30px 10px;
-        height: 450px;
-      }.box2{
-        background-color: rgb(153, 207, 238);
-        margin: 10px 10px 30px 10px;
-        height: 450px;
-      }.box3{
-        background-color: rgb(153, 207, 238);
-        margin: 10px 10px 30px 10px;
-        height: 450px;
-      }.box4{
-        background-color: rgb(153, 207, 238);
-        margin: 10px 10px 30px 10px;
-        height: 450px;
-      }
-    </style>
-  </head>
-  
-  <body>
-    <h1><a href="/">YOUARE.GG</a></h1>
-
-    <div class = "box1">
-      <h3> 1. 최근 100 게임 사용 챔피언 그래프 </h3>
-      <script src="https://d3js.org/d3.v5.min.js"></script>
-<script type="text/javascript">
-var svg = d3.select(".box1").append("svg")
-    .attr('width', 1600)
-    .attr('height', 400)
-var tmp =[${used_champ_arr}];
-var dataset = [];
-if(tmp.length<40){
-  var length = tmp.length;
-}
-else{
-  var length = 40;
-}
-for(var i = 0; i<length; i++){
-  if((i%2)==1){
-    continue;
-  }
-  dataset.push([tmp[i], tmp[i+1]])
-
-}
-var ratio = 300/dataset[0][1];
-
-svg.selectAll('rect')
-      .data(dataset)
-      .enter()
-      .append('rect')
-      .attr('x', function(d, i){
-        return i*70+30
-      })
-      .attr('y', function(d){
-        return 330 -d[1]*ratio; 
-      })
-      .attr('width', 50)
-      .attr('height', function(d){
-        return d[1]*ratio;
-      })
-      .attr('fill', 'red');
-var imgdataset = [${urlarray}];
-
-svg.selectAll('image')
-.data(imgdataset)
-.enter()
-.append('image')
-.attr("xlink:href", function(d){return d;})
-.attr('x', function(d, i){
-  return i*70+30
-})
-.attr('y', 350)
-.attr('width', 50)
-.attr('height', 50)
-
-
-svg.selectAll('text')
-.data(dataset)
-.enter()
-.append('text')
-.attr('x', function(d, i){
-  return i*70+49
-})
-.attr('y',  function(d){
-  return 320 -d[1]*ratio; 
-})
-.text(function(d){
-  return d[1];
-});
-      
-</script>
-    </div>
-
-    <div class = "box2">
-      <h3> 2. 챔피언으로 유추한 사용자의 성격 </h3>
-    </div>
-
-    <div class = "box3">
-      <h3> 3. 성격을 유추하는데 사용한 지표 그래프 </h3>
-    </div>
-
-    <div class = "box4">
-      <h3> 4. 성격과 어울리는 챔피언 추천 </h3>
-    </div>
-
-  </body>
-  
-  </html>
-    `;
+      var for_user_data = make_for_user_data(used_champ_arr, urlarray);
       res.end(for_user_data);
     }); // requset matchlist
   }); // requeset accountId
