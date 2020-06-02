@@ -1240,10 +1240,36 @@ app.get('/userinfo', function (req, res) {
     request(url_matchlist(userinfo.accountId, key), function (err, res_match, body_match) {
       let matchlist = JSON.parse(body_match);
       let total = matchlist.totalGames;
+      let win_desire = 0;
+      let gamemode_count = [0,0,0,0,0];//solo, free, normal, cold, event
+
+
       var total_champ_arr = [];
       var used_champ_arr = [];
       for (var i = 0; i < 900; i++) total_champ_arr[i] = 0;
-      for (var i = 0; i < matchlist.matches.length; i++) total_champ_arr[matchlist.matches[i].champion] += 1;
+      for (var i = 0; i < matchlist.matches.length; i++) {
+        total_champ_arr[matchlist.matches[i].champion] += 1;
+        if(matchlist.matches[i].queue == 420){
+          gamemode_count[0] += 1;
+          continue;
+        }
+        if(matchlist.matches[i].queue == 440){
+          gamemode_count[1] += 1;
+          continue;
+        }
+        if(matchlist.matches[i].queue == 430){
+          gamemode_count[2] += 1;
+          continue;
+        }
+        if(matchlist.matches[i].queue == 450){
+          gamemode_count[3] += 1;
+          continue;
+        }
+        else{
+          gamemode_count[4] += 1;
+        }
+      }
+      win_desire = (gamemode_count[0] + gamemode_count[1]*0.7 + gamemode_count[2]*0.3 + gamemode_count[3]*0.1 + gamemode_count[4]*0.1)/matchlist.matches.length*10;
       for (var i = 0; i < 900; i++) if (total_champ_arr[i] != 0) used_champ_arr.push([i, total_champ_arr[i]]);
 
 
@@ -1253,6 +1279,39 @@ app.get('/userinfo', function (req, res) {
       used_champ_arr.sort(function (a, b) {
         return b[1] - a[1];
       });
+      var most_champ = [0, 0, 0];
+      for(var i = 0; i<3; i++){
+        if(used_champ_arr[i] != null){
+          most_champ[i] = used_champ_arr[i][1];
+        }
+        else{
+          most_champ[i] = 0;
+        }
+      }
+      let master_spirit;
+      let master_param = (most_champ[0]*1.3 + most_champ[1]*1.2 + most_champ[2]*1.1)/10;
+      console.log(most_champ);
+      if(master_param > 10){
+        master_param = 10;
+      }
+      if(master_param >= 3){
+        if(master_param>=4.1){
+          master_spirit = 6.56 + Math.pow(1.23, master_param - 4.1);
+        }
+        else{
+            
+          master_spirit = 5 + Math.pow(master_param - 2.5, 2);
+        }
+      }
+      else{
+        master_spirit = 5 - Math.pow(master_param-3.5, 2);
+      }
+      if(master_spirit<0){
+        master_spirit = 0;
+      }
+      console.log(master_param);
+
+
       mlist(used_champ_arr);
 
       /*for (var i = 100; i < total; i += 100) {
@@ -1277,6 +1336,8 @@ app.get('/userinfo', function (req, res) {
         characteristic[j-2] = characteristic[j-2]+ (champarr[used_champ_arr[i][0]][j]*used_champ_arr[i][1]/100);
       }
     }
+    characteristic[3] = master_spirit;
+    characteristic[4] = win_desire;
     console.log(characteristic);
 
       var urlarray = []
@@ -1310,7 +1371,7 @@ app.get('/userinfo', function (req, res) {
       }.box3{
         background-color: rgb(255, 255, 255);
         margin: 10px 10px 30px 10px;
-        height: 450px;
+        height: 500px;
       }.box4{
         background-color: rgb(255, 255, 255);
         margin: 10px 10px 30px 10px;
@@ -1408,9 +1469,61 @@ svg.selectAll('text')
 });
 
 
+var svg = d3.select(".box2").append("svg")
+    .attr('width', 1600)
+    .attr('height', 400)
+var max_count = 0;
+gamemode_count = [${gamemode_count}];
+for(var i = 0; i<5; i++){
+  if(max_count<gamemode_count[i]){
+    max_count = gamemode_count[i];
+  }
+}
+var ratio = 300/max_count;
+svg.selectAll('rect')
+    .data(gamemode_count)
+    .enter()
+    .append('rect')
+    .attr('x', function(d, i){
+      return i*70+40
+    })
+    .attr('y', function(d){
+      return 330 -d*ratio; 
+    })
+    .attr('width', 30)
+    .attr('height', function(d){
+      return d*ratio;
+    })
+    .attr('fill', d3.rgb(140, 186, 255));
+
+svg.selectAll('text')
+    .data(["솔랭","자랭","일반","칼바람","이벤트"])
+    .enter()
+    .append('text')
+    .attr('x', function(d, i){
+      return i*70+30
+    })
+    .attr('y', 350)
+    .text(function(d){
+      return d;
+    });
+
+svg.selectAll()
+    .data(gamemode_count)
+    .enter()
+    .append('text')
+    .attr('x', function(d, i){
+      return i*70+49
+    })
+    .attr('y',  function(d){
+      return 320 -d*ratio; 
+    })
+    .text(function(d){
+      return d;
+    });
+    
 
 var ch_arr= [${characteristic}];
-
 
 function pentagon(ratio1, ratio2, ratio3, ratio4, ratio5){
   return [[400, 425-200-200*ratio1/10], [400+190.2*ratio2/10, 425-200-61.8*ratio2/10], [400+117.4*ratio3/10, 425-200+161.8*ratio3/10], [400-117.4*ratio4/10, 425-200+161.8*ratio4/10],[400-190.2*ratio5/10, 425-200-61.8*ratio5/10],[400, 425-200-200*ratio1/10] ];
@@ -1420,7 +1533,7 @@ var line = d3.line()
 .x(function (d) { return d[0]; })
 .y(function (d) { return d[1]; });
 
-var svg2 = d3.select(".box2").append("svg")
+var svg2 = d3.select(".box3").append("svg")
     .attr('width', 1600)
     .attr('height', 450)
 svg2.append("path")
@@ -1490,8 +1603,8 @@ svg2.append("path")
 .attr("fill", "none")
 .attr("stroke", d3.rgb(140, 186, 255))
 .attr("stroke-width", 1)
-var svg = d3.select(".box2").select("svg")
-svg.selectAll('text')
+var svg = d3.select(".box3").select("svg")
+svg.selectAll()
 .data(pentagon(10,10,10,10,10))
 .enter()
 .append('text')
@@ -1550,11 +1663,11 @@ svg.selectAll('text')
       }
       
     if(i == 3){
-      return "후반캐리"
+      return "장인정신"
       }
       
     if(i == 4){
-      return "?"
+      return "승부욕"
       }
 });
 
