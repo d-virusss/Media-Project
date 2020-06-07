@@ -1235,16 +1235,9 @@ var jud = 0;
 var mbti = [];
 app.get('/', function (req, res) {
   fs.readFile('youaregg.html', 'utf8', function (err, data) {
-
-    ext = 0;
-    sen = 0;
-    thi = 0;
-    jud = 0;
-    mbti = [];
     res.end(data);
   })
 });
-
 
 app.get('/question', function (req, res) {
   fs.readFile('question.html', 'utf8', function (err, data) {
@@ -1289,10 +1282,6 @@ app.get('/userinfo', function (req, res) {
       }
       win_desire = (gamemode_count[0] + gamemode_count[1] * 0.7 + gamemode_count[2] * 0.3 + gamemode_count[3] * 0.1 + gamemode_count[4] * 0.1) / matchlist.matches.length * 10;
       for (var i = 0; i < 900; i++) if (total_champ_arr[i] != 0) used_champ_arr.push([i, total_champ_arr[i]]);
-
-
-
-
 
       used_champ_arr.sort(function (a, b) {
         return b[1] - a[1];
@@ -1850,7 +1839,6 @@ app.post('/nickname_process', function (req, res) {
   });
   req.on('end', function () {
     var post = qs.parse(body);
-    nickname = post.nickname;
     res.redirect('/question');
   });
 });
@@ -1862,6 +1850,7 @@ app.post('/question_process', function (req, res) {
   });
   req.on('end', function () {
     var post = qs.parse(body);
+    console.log(post);
     ext += Number(post.ext1);
     ext += Number(post.ext2);
     ext += Number(post.ext3);

@@ -30,10 +30,12 @@
       margin-right: 10px;
       margin-left: 440px;
     }#search_button{
-      display: block;
+      position: absolute;
+      left : 50%;
       text-align: center;
-      width: 50px;
+      width: 100px;
       height: 45px;
+      margin-left:-70px;
       font-size: 15px;
     }
   </style>
@@ -44,7 +46,8 @@
   <h1><a href="/">YOUARE.GG</a></h1>
   <form action="http://localhost:3000/nickname_process" method = "POST"> 
     <input id="search" type="text" name="nickname" size="20" placeholder="닉네임">
-    <input id="search_button" type="submit" value = "검색">
+    <br><br><br><br>
+    <input id="search_button" type="submit" value = "설문시작">
   </form>
   
 <script type="text/javascript">
