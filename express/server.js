@@ -1220,6 +1220,9 @@ for (var i = 0; i < 900; i++) {
 }
 
 let show_champion_list = "";
+/*function make_mbti_template(){
+  return ``;
+}*/
 function mlist(arr) {
   for (var i = 0; i < arr.length; i++) {
     show_champion_list = show_champion_list + "<h2>Champion : " + champarr[arr[i][0]][0] + "/ 횟수 : " + arr[i][1] + "</h2>";
@@ -1239,10 +1242,47 @@ app.get('/', function (req, res) {
   })
 });
 
+app.post('/nickname_process', function (req, res) {
+  var body = '';
+  req.on('data', function (data) {
+    body = body + data;
+  });
+  req.on('end', function () {
+    var post = qs.parse(body);
+    nickname = post.nickname;
+    res.redirect('/question');
+  });
+});
+
 app.get('/question', function (req, res) {
   fs.readFile('question.html', 'utf8', function (err, data) {
     res.end(data);
   })
+});
+
+app.post('/question_process', function (req, res) {
+  var body = '';
+  req.on('data', function (data) {
+    body = body + data;
+  });
+  req.on('end', function () {
+    var post = qs.parse(body);
+    ext += Number(post.ext1);
+    ext += Number(post.ext2);
+    ext += Number(post.ext3);
+    sen += Number(post.sen1);
+    sen += Number(post.sen2);
+    sen += Number(post.sen3);
+    thi += Number(post.thi1);
+    thi += Number(post.thi2);
+    thi += Number(post.thi3);
+    thi += Number(post.thi4);
+    jud += Number(post.jud1);
+    jud += Number(post.jud2);
+    jud += Number(post.jud3);
+    mbti = [ext / 3, sen / 3, thi / 4, jud / 3];
+    res.redirect('/userinfo');
+  });
 });
 
 app.get('/userinfo', function (req, res) {
@@ -1253,7 +1293,6 @@ app.get('/userinfo', function (req, res) {
       let total = matchlist.totalGames;
       let win_desire = 0;
       let gamemode_count = [0, 0, 0, 0, 0];//solo, free, normal, cold, event
-
 
       var total_champ_arr = [];
       var used_champ_arr = [];
@@ -1323,12 +1362,6 @@ app.get('/userinfo', function (req, res) {
 
 
       mlist(used_champ_arr);
-
-      /*for (var i = 100; i < total; i += 100) {
-        request(url_matchlist_begin(userinfo.accountId, i, key), function(err, res_match_begin, body_match_begin){
-
-        })
-      }*/
 
       var resultlength;
       var characteristic = [0, 0, 0, 0, 0];
@@ -1830,43 +1863,6 @@ svg.selectAll()
     }); // requset matchlist
   }); // requeset accountId
 
-});
-
-app.post('/nickname_process', function (req, res) {
-  var body = '';
-  req.on('data', function (data) {
-    body = body + data;
-  });
-  req.on('end', function () {
-    var post = qs.parse(body);
-    res.redirect('/question');
-  });
-});
-
-app.post('/question_process', function (req, res) {
-  var body = '';
-  req.on('data', function (data) {
-    body = body + data;
-  });
-  req.on('end', function () {
-    var post = qs.parse(body);
-    console.log(post);
-    ext += Number(post.ext1);
-    ext += Number(post.ext2);
-    ext += Number(post.ext3);
-    sen += Number(post.sen1);
-    sen += Number(post.sen2);
-    sen += Number(post.sen3);
-    thi += Number(post.thi1);
-    thi += Number(post.thi2);
-    thi += Number(post.thi3);
-    thi += Number(post.thi4);
-    jud += Number(post.jud1);
-    jud += Number(post.jud2);
-    jud += Number(post.jud3);
-    mbti = [ext / 3, sen / 3, thi / 4, jud / 3];
-    res.redirect('/userinfo');
-  });
 });
 
 app.listen(3000, function () {
