@@ -189,7 +189,21 @@
     </div>
 
     <br><br>
-    <input id="search_button" type="submit" value = "설문제출">
+    <script type="text/javascript">
+      var ext1 = document.getElementsByName('ext1');
+      function radio_check(){
+        for(var i = 0; i<3; i++){
+        }
+        if(ext1.checked === undefined){
+          alert("ext1 not checked");
+          return false;
+        }
+        else{
+          document.question_form.submit();
+        }
+      }
+    </script>
+    <input id="submit_button" type="button" value = "설문제출">
     <br><br>
   </form>
 
