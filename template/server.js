@@ -1338,10 +1338,10 @@ app.get('/images/bg.jpg', function (req, res) {
       res.end(data) // Send the file data to the browser.
 });
 });
-app.get('/images/banner.jpg', function (req, res) {
-  fs.readFile('images/banner.jpg', function(err, data) {
+app.get('/images/banner.png', function (req, res) {
+  fs.readFile('images/banner.png', function(err, data) {
     if (err) throw err // Fail if the file can't be read.
-      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.writeHead(200, {'Content-Type': 'image/png'})
       res.end(data) // Send the file data to the browser.
 });
 });
@@ -1398,6 +1398,14 @@ app.get('/question', function (req, res) {
   fs.readFile('generic.html', 'utf8', function (err, data) {
     res.end(data);
   })
+});
+
+app.get('/assets/fonts/fontawesome-webfont.woff2', function (req, res) {
+  fs.readFile('assets/fonts/fontawesome-webfont.woff2', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'application/x-font-woff2'})
+      res.end(data) // Send the file data to the browser.
+});
 });
 
 app.get('/userinfo', function (req, res) {
