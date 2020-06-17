@@ -5,7 +5,7 @@ var request = require("request");
 var urlencode = require('urlencode');
 var express = require("express");
 var app = express();
-var key = "RGAPI-c9680d87-ca09-45c1-bb86-13461a06c71b";
+var key = "RGAPI-5a4ef7c8-712c-4b68-af31-bcd1a4ae9a79";
 var qs = require("querystring");
 
 var url_name = function (nickname, key) {
@@ -1395,11 +1395,6 @@ app.get('/images/compete.jpg', function (req, res) {
       res.end(data) // Send the file data to the browser.
 });
 });
-app.get('/question', function (req, res) {
-  fs.readFile('generic.html', 'utf8', function (err, data) {
-    res.end(data);
-  })
-});
 
 app.get('/assets/fonts/fontawesome-webfont.woff2', function (req, res) {
   fs.readFile('assets/fonts/fontawesome-webfont.woff2', function(err, data) {
@@ -1407,6 +1402,11 @@ app.get('/assets/fonts/fontawesome-webfont.woff2', function (req, res) {
       res.writeHead(200, {'Content-Type': 'application/x-font-woff2'})
       res.end(data) // Send the file data to the browser.
 });
+});
+app.get('/question', function (req, res) {
+  fs.readFile('generic.html', 'utf8', function (err, data) {
+    res.end(data);
+  })
 });
 
 app.get('/userinfo', function (req, res) {
@@ -1422,6 +1422,7 @@ app.get('/userinfo', function (req, res) {
       let total = matchlist.totalGames;
       let win_desire = 0;
       let gamemode_count = [0, 0, 0, 0, 0];//solo, free, normal, cold, event
+
 
       var total_champ_arr = [];
       var used_champ_arr = [];
@@ -1488,6 +1489,11 @@ app.get('/userinfo', function (req, res) {
       if (master_spirit < 0) {
         master_spirit = 0;
       }
+      console.log(ext);
+      console.log(sen);
+      console.log(thi);
+      console.log(jud);
+
 
       mlist(used_champ_arr);
 
@@ -1501,8 +1507,8 @@ app.get('/userinfo', function (req, res) {
       var characteristic = [0, 0, 0, 0, 0];
 
 
-      if (used_champ_arr.length > 20) {
-        resultlength = 20;
+      if (used_champ_arr.length > 15) {
+        resultlength = 15;
       }
       else {
         resultlength = used_champ_arr.length;
@@ -1515,73 +1521,95 @@ app.get('/userinfo', function (req, res) {
       }
       characteristic[3] = master_spirit;
       characteristic[4] = win_desire;
+      console.log(characteristic);
 
       var urlarray = []
       for (var i = 0; i < resultlength; i++) {
         urlarray.push(JSON.stringify(champarr[used_champ_arr[i][0]][1]));
       }
-
-      var for_user_data = `
-    <!doctype html>
-    <html>
-  
-  <head>
-    <title>YOUARE.GG</title>
-    <meta charset="utf-8">
-    <style>
-      body{
-        background-color: rgb(255, 255, 255);
-      }a{
-        color:rgb(86, 240, 219);
-        font-family: unset;
-        text-decoration: none;
-      }.box1{
-        background-color: rgb(255, 255, 255);
-        margin: 10px 10px 30px 10px;
-        height: 450px;
-      }.box2{
-        background-color: rgb(255, 255, 255);
-        margin: 10px 10px 30px 10px;
-        height: 500px;
-      }.box3{
-        background-color: rgb(255, 255, 255);
-        margin: 10px 10px 30px 10px;
-        height: 500px;
-      }.box4{
-        background-color: rgb(255, 255, 255);
-        margin: 10px 10px 30px 10px;
-        height: 450px;
-      }
-    </style>
-  </head>
-  
-  <body>
-    <h1><a href="/">YOUARE.GG</a></h1>
-    <h2>${nickname}님의 결과<h2>
-    <div class = "box1">
-      <h3> 1. MBTI 결과 </h3>
-      hello<br>
-      ${mbti_text}<br>
-    </div>
-
-    <div class = "box2">
-      <h3> 2. 최근 100 게임 사용 챔피언 그래프 </h3>
       
-    </div>
 
-    <div class = "box3">
-      <h3> 3. 최근 100 게임의 유형 </h3>
-    </div>
 
-    <div class = "box4">
-      <h3> 4. MBTI 결과와 최근 100게임 분석을 통한 사용자 성향 </h3>
-    </div>
+      var for_user_data = `<!DOCTYPE HTML>
+      <!--
+         Industrious by TEMPLATED
+         templated.co @templatedco
+         Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+      -->
+      <html>
+      
+      <head>
+        <title>Generic Page - Industrious by TEMPLATED</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <link rel="stylesheet" href="assets/css/main.css" />
+      </head>
+      
+      <body class="is-preload">
+      
+        <!-- Header -->
+        <header id="header">
+          <a class="logo" href="index.html">Industrious</a>
+        </header>
+      
+      
+        <!-- Heading -->
+        <div id="heading">
+          <h1>롤 MBTI 분석 결과</h1>
+        </div>
+      
+      
+        <!-- Main -->
+        <section id="main" class="wrapper">
+          <div class="inner">
+            <header class="special">
+              <h2>MBTI 설문 결과와 사용 챔피언, 게임모드를 분석한 사용자의 성향</h2>
+            </header>
+            <div class="content">
+      
+                        <h2> 1. MBTI 결과 </h2>
+                        <div class = "box1">
+                        </div>
+                        <div id = "mbti_text" style = "font-size : 15px">
+                        ${mbti_text}
+                        </div>
+                        <hr>
+                        
+                        <h2> 2. 최근 100 게임 사용 챔피언 그래프 </h2>
+                        <div class = "box2">
+                        </div>
+                        <hr>
+                    
+                        <h2> 3. 최근 100 게임의 유형 </h2>
+                        <div class = "box3">
+                        </div>
+                        <hr>
+                    
+                        <h2> 4. MBTI 결과와 최근 100게임 분석을 통한 사용자 성향 </h2>
+                        <div class = "box4">
+                        </div>
+                        <hr>
+                    
+                        <h2> 5. 추천 챔피언 및 포지션 </h2>
+                        <div class = "box5">
+                        </div>
+      
+            </div>
+          </div>
+        </section>
 
-    <div class = "box5">
-      <h3> 5. 추천 챔피언 및 포지션 </h3>
-    </div>
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/browser.min.js"></script>
+        <script src="assets/js/breakpoints.min.js"></script>
+        <script src="assets/js/util.js"></script>
+        <script src="assets/js/main.js"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script type="text/javascript">
+$("#mbti_text p#mbti_title").attr("style", "font-size : 30px; text-align : center; font-weight : bold");
+$("#mbti_text p#mbti_content").attr("style", "font-size : 20px; text-align : left");
+
 var svg = d3.select(".box1").append("svg")
     .attr('width', 1600)
     .attr('height', 400)
@@ -1649,8 +1677,24 @@ svg.selectAll().data([${mbti}]).enter()
   return d*40;
 })
 .attr("height", 30)
-.attr("fill", d3.rgb(140, 186, 255));
-
+.attr("fill", "#CE1B28")
+.on("mouseover", function(d, i){
+    $(this).attr("width", d*40 + 10)
+    $(this).attr("height", 30 + 10)
+    $(this).attr("x", 395)
+    $(this).attr("y", 100 + i*50 - 5)
+    d3.select(this).raise()
+    d3.select(".box1 svg").append("text").text((d)*10+"%").attr("id", "tmp").attr("x", d3.mouse(this)[0]).attr("y",d3.mouse(this)[1]-30)
+    .style("font-size", "40px")
+})
+.on("mouseout", function(d, i){
+  $(this).attr("width", d*40)
+  $(this).attr("height", 30)
+  $(this).attr("x", 400)
+  $(this).attr("y", 100 + i*50)
+  d3.select(this).lower()
+  $("#tmp").remove();
+});
 svg.selectAll().data([${mbti}]).enter()
     .append("rect")
     .attr("x", function(d){
@@ -1662,7 +1706,22 @@ svg.selectAll().data([${mbti}]).enter()
       return (10-d)*40;
     })
     .attr("height", 30)
-    .attr("fill", d3.rgb(116, 70, 1));
+    .attr("fill", "#008220")
+.on("mouseover", function(d, i){
+    $(this).attr("width", (10-d)*40 + 10)
+    $(this).attr("height", 30 + 10)
+    $(this).attr("x", 400 + d*40 - 5)
+    $(this).attr("y", 100 + i*50 -5)
+    d3.select(".box1 svg").append("text").text((10-d)*10+"%").attr("id", "tmp").attr("x", d3.mouse(this)[0]).attr("y",d3.mouse(this)[1]-30)
+    .style("font-size", "40px")
+})
+.on("mouseout", function(d, i){
+  $(this).attr("width", (10-d)*40)
+  $(this).attr("height", 30)
+  $(this).attr("x", 400 + d*40)
+  $(this).attr("y", 100 + i*50)
+  $("#tmp").remove();
+});
 
 svg.selectAll().data(["I(외향)","S(현실)","F(감정)","P(인식)"])
     .enter()
@@ -1683,7 +1742,6 @@ svg.selectAll().data(["I(외향)","S(현실)","F(감정)","P(인식)"])
       else{
         return "normal"
       }
-
     });
 svg.selectAll().data(["E(외향)","N(직관)","T(사고)","J(판단)"])
     .enter()
@@ -1717,11 +1775,11 @@ var tmp =[${used_champ_arr}];
 
 
 var dataset = [];
-if(tmp.length<40){
+if(tmp.length<30){
   var length = tmp.length;
 }
 else{
-  var length = 40;
+  var length = 30;
 }
 for(var i = 0; i<length; i++){
   if((i%2)==1){
@@ -1737,7 +1795,7 @@ svg.selectAll('rect')
       .enter()
       .append('rect')
       .attr('x', function(d, i){
-        return i*70+40
+        return i*70+20
       })
       .attr('y', function(d){
         return 330 -d[1]*ratio; 
@@ -1746,7 +1804,7 @@ svg.selectAll('rect')
       .attr('height', function(d){
         return d[1]*ratio;
       })
-      .attr('fill', d3.rgb(140, 186, 255));
+      .attr('fill',"#CE1B28");
 var imgdataset = [${urlarray}];
 
 svg.selectAll('image')
@@ -1755,7 +1813,7 @@ svg.selectAll('image')
 .append('image')
 .attr("xlink:href", function(d){return d;})
 .attr('x', function(d, i){
-  return i*70+30
+  return i*70+10
 })
 .attr('y', 350)
 .attr('width', 50)
@@ -1767,7 +1825,7 @@ svg.selectAll('text')
 .enter()
 .append('text')
 .attr('x', function(d, i){
-  return i*70+49
+  return i*70+29
 })
 .attr('y',  function(d){
   return 320 -d[1]*ratio; 
@@ -1787,31 +1845,34 @@ for(var i = 0; i<5; i++){
     max_count = gamemode_count[i];
   }
 }
-var ratio = 300/max_count;
+var ratio = 800/max_count;
 svg.selectAll('rect')
     .data(gamemode_count)
     .enter()
     .append('rect')
     .attr('x', function(d, i){
-      return i*70+40
+      return 80;
     })
-    .attr('y', function(d){
-      return 330 -d*ratio; 
+    .attr('y', function(d, i){
+      return i*60+60; 
     })
-    .attr('width', 30)
+    .attr('width', function(d){
+      return d*ratio; })
     .attr('height', function(d){
-      return d*ratio;
+      return 40;
     })
-    .attr('fill', d3.rgb(140, 186, 255));
+    .attr('fill', "#CE1B28");
 
 svg.selectAll('text')
     .data(["솔랭","자랭","일반","칼바람","이벤트"])
     .enter()
     .append('text')
     .attr('x', function(d, i){
-      return i*70+30
+      return 15
     })
-    .attr('y', 350)
+    .attr('y',  function(d, i){
+      return i*60+85; 
+    })
     .text(function(d){
       return d;
     })
@@ -1823,10 +1884,10 @@ svg.selectAll()
     .enter()
     .append('text')
     .attr('x', function(d, i){
-      return i*70+49
+      return 90+d*ratio
     })
-    .attr('y',  function(d){
-      return 320 -d*ratio; 
+    .attr('y',  function(d, i){
+      return i*60+82; 
     })
     .text(function(d){
       return d;
@@ -1922,7 +1983,7 @@ svg.selectAll()
 .append('text')
 .attr('x', function(d, i){
   if(i == 0){
-  return d[0]-40
+  return d[0]-20
   }
   if(i == 1){
     return d[0]
@@ -1937,12 +1998,12 @@ svg.selectAll()
     }
     
   if(i == 4){
-    return d[0]- 95
+    return d[0]- 65
     }
 })
 .attr('y',  function(d, i){
   if(i == 0){
-  return d[1]-10
+  return d[1]-5
   }
   if(i == 1){
     return d[1]
@@ -2025,11 +2086,10 @@ app.post('/question_process', function (req, res) {
     thi += Number(post.thi1);
     thi += Number(post.thi2);
     thi += Number(post.thi3);
-    thi += Number(post.thi4);
     jud += Number(post.jud1);
     jud += Number(post.jud2);
     jud += Number(post.jud3);
-    mbti = [ext / 3, sen / 3, thi / 4, jud / 3];
+    mbti = [ext / 3, sen / 3, thi / 3, jud / 3];
 
     {// mbti type 결정
       if(mbti[0] >= 5){ // 5점 이상이면 내향형(I)
@@ -2058,8 +2118,7 @@ app.post('/question_process', function (req, res) {
       }
     }
     mbti_type = type1 + type2 + type3 + type4;
-    mbti_type="ENFJ";
-    console.log(mbti_type);
+    mbti_type = "ENFJ";
     res.redirect('/userinfo');
   });
 });

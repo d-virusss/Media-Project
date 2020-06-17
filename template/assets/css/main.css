@@ -2502,7 +2502,7 @@ body {
   background-image: linear-gradient(rgba(17, 17, 17, 0.25), rgba(17, 17, 17, 0.25)), url("../../images/banner.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   border-top: 0;
   display: -ms-flexbox;
   height: 15rem !important;
@@ -2645,7 +2645,7 @@ body {
     background: linear-gradient(135deg, #d5d4d4 0%, #111111 74%);
     content: ' ';
     display: block;
-    height: 50%;
+    height: 100%;
     left: 0;
     opacity: 0.3;
     position: absolute;
