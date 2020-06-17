@@ -1522,6 +1522,13 @@ app.get('/userinfo', function (req, res) {
         urlarray.push(JSON.stringify(champarr[used_champ_arr[i][0]][1]));
       }
 
+      let mbti_text;
+
+      fs.readFile(`MBTI_sheet/${mbti_type}`, 'utf-8', function (err, data) {
+        console.log(typeof(data));
+        mbti_text = (data);
+        console.log(typeof(mbti_text));
+      });
 
       var for_user_data = `
     <!doctype html>
@@ -1562,7 +1569,8 @@ app.get('/userinfo', function (req, res) {
     <h2>${nickname}님의 결과<h2>
     <div class = "box1">
       <h3> 1. MBTI 결과 </h3>
-      
+      hello<br>
+      ` + mbti_text + `
     </div>
 
     <div class = "box2">

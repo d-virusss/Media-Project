@@ -190,7 +190,7 @@
 						<h3>12. 본인은 레드팀 탑 라이너다. 리쉬를 해주고 올라가는데 적 탑이 삼거리 부시에서 반갑게 맞아준다. 어떻게 하지?</h3>
 
 
-						<input type="radio" id="jud3_1" name="jud3" value="8" checked>
+						<input type="radio" id="jud3_1" name="jud3" value="8">
 						<label for="jud3_1">날 때려? 뒤질때까지 싸운다.</label>
 						<br>
 						<input type="radio" id="jud3_3" name="jud3" value="2">
@@ -213,6 +213,111 @@
 	<script src="assets/js/breakpoints.min.js"></script>
 	<script src="assets/js/util.js"></script>
 	<script src="assets/js/main.js"></script>
+	<script type="text/javascript">
+		var ext = new Array(document.getElementsByName("ext1"),
+		  document.getElementsByName("ext2"),
+		  document.getElementsByName("ext3"));
+  
+		var sen = new Array(document.getElementsByName("sen1"),
+		  document.getElementsByName("sen2"),
+		  document.getElementsByName("sen3"));
+  
+		var thi = new Array(document.getElementsByName("thi1"),
+		  document.getElementsByName("thi2"),
+		  document.getElementsByName("thi3"));
+  
+		var jud = new Array(document.getElementsByName("jud1"),
+		  document.getElementsByName("jud2"),
+		  document.getElementsByName("jud3"));
+  
+		var ext_check = new Array(false, false, false);
+		var sen_check = new Array(false, false, false);
+		var thi_check = new Array(false, false, false);
+		var jud_check = new Array(false, false, false);
+  
+  
+		function radio_check() {
+		  var result_check = true;
+		  for (let i = 0; i < 3; i++) { // ext 3문제
+			for (let j = 0; j < 3; j++) { // 문항별 보기 개수
+			  if (i === 1 && j === 2) break;
+			  if (i===3 && j ===2) break;
+			  if (ext[i][j].checked === true) {
+				ext_check[i] = true;
+				break;
+			  }
+			}
+		  }
+		  for (let i = 0; i < 3; i++) { // sen 3문제
+			for (let j = 0; j < 3; j++) {
+			  if(i===1 && j===2) break;
+			  if(i===2 && j===2) break;
+			  if (sen[i][j].checked === true) {
+				sen_check[i] = true;
+				break;
+			  }
+			}
+		  }
+		  for (let i = 0; i < 4; i++) { // thi 3문제
+			for (let j = 0; j < 2; j++) {
+			  if (thi[i][j].checked === true) {
+				thi_check[i] = true;
+				break;
+			  }
+			}
+		  }
+		  for (let i = 0; i < 3; i++) { // jud 3문제
+			for (let j = 0; j < 2; j++) {
+			  if (jud[i][j].checked === true) {
+				jud_check[i] = true;
+				break;
+			  }
+			}
+		  }
+		  for (let i = 0; i < ext_check.length; i++) {
+			if (ext_check[i] === false) {
+			  result_check = false;
+			  break;
+			}
+		  }
+		  for (let i = 0; i < sen_check.length; i++) {
+			if (sen_check[i] === false) {
+			  result_check = false;
+			  break;
+			}
+		  }
+		  for (let i = 0; i < thi_check.length; i++) {
+			if (thi_check[i] === false) {
+			  result_check = false;
+			  break;
+			}
+		  }
+		  for (let i = 0; i < jud_check.length; i++) {
+			if (jud_check[i] === false) {
+			  result_check = false;
+			  break;
+			}
+		  }
+		  if (result_check === false) {
+			alert("모든 문항에 답해주세요.");
+			/*for(let i=0; i<ext_check.length; i++){
+			  console.log(ext_check[i]);
+			}
+			for(let i=0; i<sen_check.length; i++){
+			  console.log(sen_check[i]);
+			}
+			for(let i=0; i<thi_check.length; i++){
+			  console.log(thi_check[i]);
+			}
+			for(let i=0; i<jud_check.length; i++){
+			  console.log(jud_check[i]);
+			}*/
+		  }
+		  else {
+			document.question_form.submit();
+		  }
+		}
+	  </script>
 
 </body>
 
