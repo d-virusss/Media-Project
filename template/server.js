@@ -1232,6 +1232,7 @@ var ext = 0;
 var sen = 0;
 var thi = 0;
 var jud = 0;
+var type1, type2, type3, type4, mbti_type;
 var mbti = [];
 app.get('/', function (req, res) {
   fs.readFile('index.html', 'utf8', function (err, data) {
@@ -1417,7 +1418,6 @@ app.get('/userinfo', function (req, res) {
       let win_desire = 0;
       let gamemode_count = [0, 0, 0, 0, 0];//solo, free, normal, cold, event
 
-
       var total_champ_arr = [];
       var used_champ_arr = [];
       for (var i = 0; i < 900; i++) total_champ_arr[i] = 0;
@@ -1483,11 +1483,6 @@ app.get('/userinfo', function (req, res) {
       if (master_spirit < 0) {
         master_spirit = 0;
       }
-      console.log(ext);
-      console.log(sen);
-      console.log(thi);
-      console.log(jud);
-
 
       mlist(used_champ_arr);
 
@@ -1515,7 +1510,6 @@ app.get('/userinfo', function (req, res) {
       }
       characteristic[3] = master_spirit;
       characteristic[4] = win_desire;
-      console.log(characteristic);
 
       var urlarray = []
       for (var i = 0; i < resultlength; i++) {
@@ -1525,9 +1519,7 @@ app.get('/userinfo', function (req, res) {
       let mbti_text;
 
       fs.readFile(`MBTI_sheet/${mbti_type}`, 'utf-8', function (err, data) {
-        console.log(typeof(data));
         mbti_text = (data);
-        console.log(typeof(mbti_text));
       });
 
       var for_user_data = `
@@ -1570,7 +1562,7 @@ app.get('/userinfo', function (req, res) {
     <div class = "box1">
       <h3> 1. MBTI 결과 </h3>
       hello<br>
-      ` + mbti_text + `
+      ${mbti_text}<br>
     </div>
 
     <div class = "box2">
@@ -1605,7 +1597,7 @@ svg.selectAll().data([${mbti}])
 .attr("y", 200)
 .text(function(d, i){
   if(i == 0){
-    if(d>5){
+    if(d>=5){
       mbti_which.push(0);
       return "I";
     }
@@ -1615,17 +1607,17 @@ svg.selectAll().data([${mbti}])
     }
   }
   if(i == 1){
-    if(d>5){
+    if(d>=5){
       mbti_which.push(0);
-      return "S";
+      return "N";
     }
     else{
       mbti_which.push(1);
-      return "N";
+      return "S";
     }
   }
   if(i == 2){
-    if(d>5){
+    if(d>=5){
       mbti_which.push(0);
     return "F";
     }
@@ -1635,7 +1627,7 @@ svg.selectAll().data([${mbti}])
     }
   }
   if(i == 3){
-    if(d>5){
+    if(d>=5){
       mbti_which.push(0);
     return "P";
     }
@@ -2040,6 +2032,35 @@ app.post('/question_process', function (req, res) {
     jud += Number(post.jud2);
     jud += Number(post.jud3);
     mbti = [ext / 3, sen / 3, thi / 4, jud / 3];
+
+    {// mbti type 결정
+      if(mbti[0] >= 5){ // 5점 이상이면 내향형(I)
+        type1 = "I";
+      }
+      else{
+        type1 = "E";
+      }
+      if(mbti[1] >= 5){ // 5점 이상이면 직관형(N)
+        type2 = "N";
+      }
+      else{
+        type2 = "S";
+      }
+      if(mbti[2] >= 5){ // 5점 이상이면 감정형(F)
+        type3 = "F";
+      }
+      else{
+        type3 = "T";
+      }
+      if(mbti[3] >= 5){ // 5점 이상이면 인식(즉흥)형(P)
+        type4 = "P";
+      }
+      else{
+        type4 = "J";
+      }
+    }
+    mbti_type = type1 + type2 + type3 + type4;
+    console.log(mbti_type);
     res.redirect('/userinfo');
   });
 });
