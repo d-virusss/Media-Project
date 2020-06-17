@@ -1411,6 +1411,11 @@ app.get('/assets/fonts/fontawesome-webfont.woff2', function (req, res) {
 
 app.get('/userinfo', function (req, res) {
   request(url_name(nickname, key), function (err, res_name, body_name) {
+    let mbti_text;
+
+    fs.readFile(`MBTI_sheet/${mbti_type}`, 'utf-8', function (err, data) {
+      mbti_text = (data);
+    });
     const userinfo = JSON.parse(body_name);
     request(url_matchlist(userinfo.accountId, key), function (err, res_match, body_match) {
       let matchlist = JSON.parse(body_match);
@@ -1516,12 +1521,6 @@ app.get('/userinfo', function (req, res) {
         urlarray.push(JSON.stringify(champarr[used_champ_arr[i][0]][1]));
       }
 
-      let mbti_text;
-
-      fs.readFile(`MBTI_sheet/${mbti_type}`, 'utf-8', function (err, data) {
-        mbti_text = (data);
-      });
-
       var for_user_data = `
     <!doctype html>
     <html>
@@ -1583,7 +1582,6 @@ app.get('/userinfo', function (req, res) {
     </div>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script type="text/javascript">
-
 var svg = d3.select(".box1").append("svg")
     .attr('width', 1600)
     .attr('height', 400)
@@ -2060,6 +2058,7 @@ app.post('/question_process', function (req, res) {
       }
     }
     mbti_type = type1 + type2 + type3 + type4;
+    mbti_type="ENFJ";
     console.log(mbti_type);
     res.redirect('/userinfo');
   });
