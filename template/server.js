@@ -5,7 +5,7 @@ var request = require("request");
 var urlencode = require('urlencode');
 var express = require("express");
 var app = express();
-var key = "RGAPI-5a4ef7c8-712c-4b68-af31-bcd1a4ae9a79";
+var key = "RGAPI-c9680d87-ca09-45c1-bb86-13461a06c71b";
 var qs = require("querystring");
 
 var url_name = function (nickname, key) {
@@ -1489,11 +1489,6 @@ app.get('/userinfo', function (req, res) {
       if (master_spirit < 0) {
         master_spirit = 0;
       }
-      console.log(ext);
-      console.log(sen);
-      console.log(thi);
-      console.log(jud);
-
 
       mlist(used_champ_arr);
 
@@ -1521,7 +1516,6 @@ app.get('/userinfo', function (req, res) {
       }
       characteristic[3] = master_spirit;
       characteristic[4] = win_desire;
-      console.log(characteristic);
 
       var urlarray = []
       for (var i = 0; i < resultlength; i++) {
@@ -1539,7 +1533,7 @@ app.get('/userinfo', function (req, res) {
       <html>
       
       <head>
-        <title>Generic Page - Industrious by TEMPLATED</title>
+        <title>MBTI 분석 결과</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <meta name="description" content="" />
@@ -1551,7 +1545,7 @@ app.get('/userinfo', function (req, res) {
       
         <!-- Header -->
         <header id="header">
-          <a class="logo" href="index.html">Industrious</a>
+          <a class="logo" href="index.html">LOL MBTI</a>
         </header>
       
       
@@ -2118,7 +2112,6 @@ app.post('/question_process', function (req, res) {
       }
     }
     mbti_type = type1 + type2 + type3 + type4;
-    mbti_type = "ENFJ";
     res.redirect('/userinfo');
   });
 });
