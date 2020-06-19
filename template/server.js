@@ -1228,25 +1228,17 @@ function mlist(arr) {
 }
 
 var nickname;
-var ext = 0;
-var sen = 0;
-var thi = 0;
-var jud = 0;
+var ext;
+var sen;
+var thi;
+var jud;
 var type1, type2, type3, type4, mbti_type;
-var mbti = [];
+var mbti;
 app.get('/', function (req, res) {
   fs.readFile('index.html', 'utf8', function (err, data) {
-
-    ext = 0;
-    sen = 0;
-    thi = 0;
-    jud = 0;
-    mbti = [];
     res.end(data);
   })
 });
-
-
 app.get('/background', function (req, res) {
   fs.readFile('main.jpg', function(err, data) {
     if (err) throw err // Fail if the file can't be read.
@@ -1346,6 +1338,13 @@ app.get('/images/banner.png', function (req, res) {
       res.end(data) // Send the file data to the browser.
 });
 });
+app.get('/images/alter.png', function (req, res) {
+  fs.readFile('images/alter.png', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/png'})
+      res.end(data) // Send the file data to the browser.
+});
+});
 app.get('/images/cta01.jpg', function (req, res) {
   fs.readFile('images/cta01.jpg', function(err, data) {
     if (err) throw err // Fail if the file can't be read.
@@ -1395,7 +1394,6 @@ app.get('/images/compete.jpg', function (req, res) {
       res.end(data) // Send the file data to the browser.
 });
 });
-
 app.get('/assets/fonts/fontawesome-webfont.woff2', function (req, res) {
   fs.readFile('assets/fonts/fontawesome-webfont.woff2', function(err, data) {
     if (err) throw err // Fail if the file can't be read.
@@ -1408,13 +1406,15 @@ app.get('/question', function (req, res) {
     res.end(data);
   })
 });
-
 app.get('/userinfo', function (req, res) {
   request(url_name(nickname, key), function (err, res_name, body_name) {
     let mbti_text;
-
+    let mbti_recommend_text;
     fs.readFile(`MBTI_sheet/${mbti_type}`, 'utf-8', function (err, data) {
       mbti_text = (data);
+    });
+    fs.readFile(`MBTI_sheet/${mbti_type}R`, 'utf-8', function(err, data){
+      mbti_recommend_text = (data);
     });
     const userinfo = JSON.parse(body_name);
     request(url_matchlist(userinfo.accountId, key), function (err, res_match, body_match) {
@@ -1470,7 +1470,6 @@ app.get('/userinfo', function (req, res) {
       }
       let master_spirit;
       let master_param = (most_champ[0] * 1.3 + most_champ[1] * 1.2 + most_champ[2] * 1.1) / 10;
-      console.log(most_champ);
       if (master_param > 10) {
         master_param = 10;
       }
@@ -1522,8 +1521,6 @@ app.get('/userinfo', function (req, res) {
         urlarray.push(JSON.stringify(champarr[used_champ_arr[i][0]][1]));
       }
       
-
-
       var for_user_data = `<!DOCTYPE HTML>
       <!--
          Industrious by TEMPLATED
@@ -1533,7 +1530,7 @@ app.get('/userinfo', function (req, res) {
       <html>
       
       <head>
-        <title>MBTI 분석 결과</title>
+        <title>LOL MBTI 분석 결과</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <meta name="description" content="" />
@@ -1545,14 +1542,14 @@ app.get('/userinfo', function (req, res) {
       
         <!-- Header -->
         <header id="header">
-          <a class="logo" href="index.html">LOL MBTI</a>
+          <a class="logo" href="./">LOL MBTI</a>
         </header>
       
       
         <!-- Heading -->
-        <div id="heading">
-          <h1>롤 MBTI 분석 결과</h1>
-        </div>
+				<div id="heading">
+          <h1>LOL MBTI / 플레이어 성향 분석 결과</h1>
+				</div>
       
       
         <!-- Main -->
@@ -1588,6 +1585,9 @@ app.get('/userinfo', function (req, res) {
                     
                         <h2> 5. 추천 챔피언 및 포지션 </h2>
                         <div class = "box5">
+                        </div>
+                        <div id = "mbti_recommend_text" style="font-size : 15px">
+                        ${mbti_recommend_text}
                         </div>
       
             </div>
@@ -1717,7 +1717,7 @@ svg.selectAll().data([${mbti}]).enter()
   $("#tmp").remove();
 });
 
-svg.selectAll().data(["I(외향)","S(현실)","F(감정)","P(인식)"])
+svg.selectAll().data(["I(외향)","N(직관)","F(감정)","P(인식)"])
     .enter()
     .append("text")
     .attr("x", function(d, i){
@@ -1737,7 +1737,7 @@ svg.selectAll().data(["I(외향)","S(현실)","F(감정)","P(인식)"])
         return "normal"
       }
     });
-svg.selectAll().data(["E(외향)","N(직관)","T(사고)","J(판단)"])
+svg.selectAll().data(["E(외향)","S(현실)","T(사고)","J(판단)"])
     .enter()
     .append("text")
     .attr("x", function(d, i){
@@ -2051,7 +2051,6 @@ svg.selectAll()
   }); // requeset accountId
 
 });
-
 app.post('/nickname_process', function (req, res) {
   var body = '';
   req.on('data', function (data) {
@@ -2063,9 +2062,13 @@ app.post('/nickname_process', function (req, res) {
     res.redirect('/question');
   });
 });
-
 app.post('/question_process', function (req, res) {
   var body = '';
+  ext = 0;
+  sen = 0;
+  thi = 0;
+  jud = 0;
+  mbti = [];
   req.on('data', function (data) {
     body = body + data;
   });
