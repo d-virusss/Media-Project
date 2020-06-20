@@ -19,9 +19,9 @@
 
 	<header id="header">
 		<a class="logo" href="./">LOL MBTI</a>
-	 </header> 
+	</header>
 	<!-- Heading -->
-	<div id="heading" style ="height : 30rem !important; min-height : 30rem">
+	<div id="heading" style="height : 30rem !important; min-height : 30rem">
 		<h1>MBTI 유형 분석을 위한 설문 조사</h1>
 	</div>
 
@@ -200,7 +200,8 @@
 						<hr>
 					</div>
 
-					<input type="button" value="설문제출" class = "primary" style = "margin-left:40%; width : 20%" onclick="radio_check()">
+					<input type="button" value="설문제출" class="primary" style="margin-left:40%; width : 20%"
+						onclick="radio_check()">
 				</form>
 
 			</div>
@@ -216,109 +217,110 @@
 	<script src="assets/js/main.js"></script>
 	<script type="text/javascript">
 		var ext = new Array(document.getElementsByName("ext1"),
-		  document.getElementsByName("ext2"),
-		  document.getElementsByName("ext3"));
-  
+			document.getElementsByName("ext2"),
+			document.getElementsByName("ext3"));
+
 		var sen = new Array(document.getElementsByName("sen1"),
-		  document.getElementsByName("sen2"),
-		  document.getElementsByName("sen3"));
-  
+			document.getElementsByName("sen2"),
+			document.getElementsByName("sen3"));
+
 		var thi = new Array(document.getElementsByName("thi1"),
-		  document.getElementsByName("thi2"),
-		  document.getElementsByName("thi3"));
-  
+			document.getElementsByName("thi2"),
+			document.getElementsByName("thi3"));
+
 		var jud = new Array(document.getElementsByName("jud1"),
-		  document.getElementsByName("jud2"),
-		  document.getElementsByName("jud3"));
-  
+			document.getElementsByName("jud2"),
+			document.getElementsByName("jud3"));
+
 		var ext_check = new Array(false, false, false);
 		var sen_check = new Array(false, false, false);
 		var thi_check = new Array(false, false, false);
 		var jud_check = new Array(false, false, false);
-  
-  
+
+
 		function radio_check() {
-		  var result_check = true;
-		  for (let i = 0; i < 3; i++) { // ext 3문제
-			for (let j = 0; j < 3; j++) { // 문항별 보기 개수
-			  if (i === 1 && j === 2) break;
-			  if (i===3 && j ===2) break;
-			  if (ext[i][j].checked === true) {
-				ext_check[i] = true;
-				break;
-			  }
+			var result_check = true;
+			for (let i = 0; i < 3; i++) { // ext 3문제
+				for (let j = 0; j < 3; j++) { // 문항별 보기 개수
+					if (i === 0 && j === 2) break;
+					if (i === 2 && j === 2) break;
+					if (ext[i][j].checked === true) {
+						ext_check[i] = true;
+						break;
+					}
+				}
 			}
-		  }
-		  for (let i = 0; i < 3; i++) { // sen 3문제
-			for (let j = 0; j < 3; j++) {
-			  if(i===1 && j===2) break;
-			  if(i===2 && j===2) break;
-			  if (sen[i][j].checked === true) {
-				sen_check[i] = true;
-				break;
-			  }
+			for (let i = 0; i < 3; i++) { // sen 3문제
+				for (let j = 0; j < 3; j++) {
+
+					if (i === 0 && j === 2) break;
+					if (i === 1 && j === 2) break;
+					if (sen[i][j].checked === true) {
+						sen_check[i] = true;
+						break;
+					}
+				}
 			}
-		  }
-		  for (let i = 0; i < 3; i++) { // thi 3문제
-			for (let j = 0; j < 2; j++) {
-			  if (thi[i][j].checked === true) {
-				thi_check[i] = true;
-				break;
-			  }
+			for (let i = 0; i < 3; i++) { // thi 3문제
+				for (let j = 0; j < 2; j++) {
+					if (thi[i][j].checked === true) {
+						thi_check[i] = true;
+						break;
+					}
+				}
 			}
-		  }
-		  for (let i = 0; i < 3; i++) { // jud 3문제
-			for (let j = 0; j < 2; j++) {
-			  if (jud[i][j].checked === true) {
-				jud_check[i] = true;
-				break;
-			  }
+			for (let i = 0; i < 3; i++) { // jud 3문제
+				for (let j = 0; j < 2; j++) {
+					if (jud[i][j].checked === true) {
+						jud_check[i] = true;
+						break;
+					}
+				}
 			}
-		  }
-		  for (let i = 0; i < ext_check.length; i++) {
-			if (ext_check[i] === false) {
-			  result_check = false;
-			  break;
+			for (let i = 0; i < ext_check.length; i++) {
+				if (ext_check[i] === false) {
+					result_check = false;
+					break;
+				}
 			}
-		  }
-		  for (let i = 0; i < sen_check.length; i++) {
-			if (sen_check[i] === false) {
-			  result_check = false;
-			  break;
+			for (let i = 0; i < sen_check.length; i++) {
+				if (sen_check[i] === false) {
+					result_check = false;
+					break;
+				}
 			}
-		  }
-		  for (let i = 0; i < thi_check.length; i++) {
-			if (thi_check[i] === false) {
-			  result_check = false;
-			  break;
+			for (let i = 0; i < thi_check.length; i++) {
+				if (thi_check[i] === false) {
+					result_check = false;
+					break;
+				}
 			}
-		  }
-		  for (let i = 0; i < jud_check.length; i++) {
-			if (jud_check[i] === false) {
-			  result_check = false;
-			  break;
+			for (let i = 0; i < jud_check.length; i++) {
+				if (jud_check[i] === false) {
+					result_check = false;
+					break;
+				}
 			}
-		  }
-		  if (result_check === false) {
-			alert("모든 문항에 답해주세요.");
-			for(let i=0; i<ext_check.length; i++){
-			  console.log(ext_check[i]);
+			if (result_check === false) {
+				alert("모든 문항에 답해주세요.");
+				for (let i = 0; i < ext_check.length; i++) {
+					console.log(ext_check[i]);
+				}
+				for (let i = 0; i < sen_check.length; i++) {
+					console.log(sen_check[i]);
+				}
+				for (let i = 0; i < thi_check.length; i++) {
+					console.log(thi_check[i]);
+				}
+				for (let i = 0; i < jud_check.length; i++) {
+					console.log(jud_check[i]);
+				}
 			}
-			for(let i=0; i<sen_check.length; i++){
-			  console.log(sen_check[i]);
+			else {
+				document.question_form.submit();
 			}
-			for(let i=0; i<thi_check.length; i++){
-			  console.log(thi_check[i]);
-			}
-			for(let i=0; i<jud_check.length; i++){
-			  console.log(jud_check[i]);
-			}
-		  }
-		  else {
-			document.question_form.submit();
-		  }
 		}
-	  </script>
+	</script>
 
 </body>
 
