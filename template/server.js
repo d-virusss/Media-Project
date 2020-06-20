@@ -1547,7 +1547,8 @@ app.get('/userinfo', function (req, res) {
       
       
         <!-- Heading -->
-				<div id="heading">
+				<div id="heading" style="height : 30rem !important; min-height : 30rem; 
+        background-image: linear-gradient(rgba(17, 17, 17, 0.25), rgba(17, 17, 17, 0.25)), url(../../images/alter.png);">
           <h1>LOL MBTI / 플레이어 성향 분석 결과</h1>
 				</div>
       
@@ -1586,7 +1587,7 @@ app.get('/userinfo', function (req, res) {
                         <h2> 5. 추천 챔피언 및 포지션 </h2>
                         <div class = "box5">
                         </div>
-                        <div id = "mbti_recommend_text" style="font-size : 15px">
+                        <div id = "mbti_recommend_text" style="font-size : 30px;margin-top:50px;margin-left:3%">
                         ${mbti_recommend_text}
                         </div>
       
@@ -1660,11 +1661,30 @@ svg.selectAll().data([${mbti}])
 })
 .style("font-size", "40px");
 
-
+svg.selectAll().data([${mbti}]).enter()
+.append("circle")
+.attr("cx", 430)
+.attr("cy", function(d, i){
+  return 100 +15+ i*50})
+.attr("r", 15)
+.attr("fill", "#CE1B28")
+.attr("id", function(d,i){
+  return "left_circle"+i;
+})
 
 svg.selectAll().data([${mbti}]).enter()
+.append("circle")
+.attr("cx", 830)
+.attr("cy", function(d, i){
+  return 100 +15+ i*50})
+.attr("r", 15)
+.attr("fill", "#008220")
+.attr("id", function(d,i){
+  return "right_circle"+i;
+})
+svg.selectAll().data([${mbti}]).enter()
 .append("rect")
-.attr("x", 400)
+.attr("x", 430)
 .attr("y", function(d, i){
   return 100 + i*50})
 .attr("width", function(d){
@@ -1675,8 +1695,9 @@ svg.selectAll().data([${mbti}]).enter()
 .on("mouseover", function(d, i){
     $(this).attr("width", d*40 + 10)
     $(this).attr("height", 30 + 10)
-    $(this).attr("x", 395)
+    $(this).attr("x", 425)
     $(this).attr("y", 100 + i*50 - 5)
+    $("#left_circle"+i).attr("r", 20).attr("cx", 425);
     d3.select(this).raise()
     d3.select(".box1 svg").append("text").text((d)*10+"%").attr("id", "tmp").attr("x", d3.mouse(this)[0]).attr("y",d3.mouse(this)[1]-30)
     .style("font-size", "40px")
@@ -1684,15 +1705,16 @@ svg.selectAll().data([${mbti}]).enter()
 .on("mouseout", function(d, i){
   $(this).attr("width", d*40)
   $(this).attr("height", 30)
-  $(this).attr("x", 400)
+  $(this).attr("x", 430)
   $(this).attr("y", 100 + i*50)
+  $("#left_circle"+i).attr("r", 15).attr("cx", 430);
   d3.select(this).lower()
   $("#tmp").remove();
 });
 svg.selectAll().data([${mbti}]).enter()
     .append("rect")
     .attr("x", function(d){
-      return 400 + d*40;
+      return 430 + d*40;
     })
     .attr("y", function(d, i){
       return 100 + i*50})
@@ -1704,16 +1726,18 @@ svg.selectAll().data([${mbti}]).enter()
 .on("mouseover", function(d, i){
     $(this).attr("width", (10-d)*40 + 10)
     $(this).attr("height", 30 + 10)
-    $(this).attr("x", 400 + d*40 - 5)
+    $(this).attr("x", 430 + d*40 - 5)
     $(this).attr("y", 100 + i*50 -5)
     d3.select(".box1 svg").append("text").text((10-d)*10+"%").attr("id", "tmp").attr("x", d3.mouse(this)[0]).attr("y",d3.mouse(this)[1]-30)
     .style("font-size", "40px")
+    $("#right_circle"+i).attr("r", 20).attr("cx",835);
 })
 .on("mouseout", function(d, i){
   $(this).attr("width", (10-d)*40)
   $(this).attr("height", 30)
-  $(this).attr("x", 400 + d*40)
+  $(this).attr("x", 430 + d*40)
   $(this).attr("y", 100 + i*50)
+  $("#right_circle"+i).attr("r", 15).attr("cx",830);
   $("#tmp").remove();
 });
 
@@ -1741,7 +1765,7 @@ svg.selectAll().data(["E(외향)","S(현실)","T(사고)","J(판단)"])
     .enter()
     .append("text")
     .attr("x", function(d, i){
-      return 810;
+      return 880;
     })
     .attr("y", function(d, i){
       return 120 + i*50})
@@ -1763,7 +1787,7 @@ svg.selectAll().data(["E(외향)","S(현실)","T(사고)","J(판단)"])
 
 var svg = d3.select(".box2").append("svg")
         .attr('width', 1600)
-        .attr('height', 400)
+        .attr('height', 450)
 var tmp =[${used_champ_arr}];
 
 
@@ -1792,12 +1816,36 @@ svg.selectAll('rect')
         return i*70+20
       })
       .attr('y', function(d){
-        return 330 -d[1]*ratio; 
+        return 340 -d[1]*ratio; 
       })
       .attr('width', 30)
       .attr('height', function(d){
         return d[1]*ratio;
       })
+      .attr('fill',"#CE1B28");
+svg.selectAll()
+      .data(dataset)
+      .enter()
+      .append('circle')
+      .attr('cx', function(d, i){
+        return i*70+20+15
+      })
+      .attr('cy', function(d){
+        return 340 -d[1]*ratio; 
+      })
+      .attr('r', 15)
+      .attr('fill',"#CE1B28");
+svg.selectAll()
+      .data(dataset)
+      .enter()
+      .append('circle')
+      .attr('cx', function(d, i){
+        return i*70+20+15
+      })
+      .attr('cy', function(d){
+        return 340; 
+      })
+      .attr('r', 15)
       .attr('fill',"#CE1B28");
 var imgdataset = [${urlarray}];
 
@@ -1809,7 +1857,7 @@ svg.selectAll('image')
 .attr('x', function(d, i){
   return i*70+10
 })
-.attr('y', 350)
+.attr('y', 375)
 .attr('width', 50)
 .attr('height', 50)
 
@@ -1845,7 +1893,7 @@ svg.selectAll('rect')
     .enter()
     .append('rect')
     .attr('x', function(d, i){
-      return 80;
+      return 100;
     })
     .attr('y', function(d, i){
       return i*60+60; 
@@ -1853,10 +1901,33 @@ svg.selectAll('rect')
     .attr('width', function(d){
       return d*ratio; })
     .attr('height', function(d){
-      return 40;
+      return 30;
     })
     .attr('fill', "#CE1B28");
+svg.selectAll()
+    .data(gamemode_count)
+    .enter()
+    .append('circle')
+    .attr("cx", function(d, i){
+      return 100;
+    })
+    .attr("cy", function(d, i){
+      return i*60+75; 
+    })
+    .attr("r", "15")
+    .attr("fill", "#CE1B28")
 
+svg.selectAll()
+    .data(gamemode_count)
+    .enter()
+    .append('circle')
+    .attr("cx", function(d){
+      return 100 + d*ratio; })
+    .attr("cy", function(d, i){
+      return i*60+75; 
+    })
+    .attr("r", "15")
+    .attr("fill", "#CE1B28")
 svg.selectAll('text')
     .data(["솔랭","자랭","일반","칼바람","이벤트"])
     .enter()
@@ -1878,7 +1949,7 @@ svg.selectAll()
     .enter()
     .append('text')
     .attr('x', function(d, i){
-      return 90+d*ratio
+      return 130+d*ratio
     })
     .attr('y',  function(d, i){
       return i*60+82; 
@@ -2039,6 +2110,8 @@ svg.selectAll()
 })
 .style("font-size", "20px")
 .style("font-weight", "normal");
+
+$("rect").attr("opacity", "1");
 
 </script>
 
