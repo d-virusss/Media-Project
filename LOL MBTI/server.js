@@ -1220,79 +1220,213 @@ for (var i = 0; i < 900; i++) {
 }
 
 let show_champion_list = "";
-/*function make_mbti_template(){
-  return ``;
-}*/
 function mlist(arr) {
   for (var i = 0; i < arr.length; i++) {
     show_champion_list = show_champion_list + "<h2>Champion : " + champarr[arr[i][0]][0] + "/ 횟수 : " + arr[i][1] + "</h2>";
     show_champion_list = show_champion_list + "<img src=" + champarr[arr[i][0]][1] + " width=50px height=50px>";
   }
 }
-
+var nickname_success;
 var nickname;
-var ext = 0;
-var sen = 0;
-var thi = 0;
-var jud = 0;
-var mbti = [];
+var userinfo_body;
+var ext;
+var sen;
+var thi;
+var jud;
+var type1, type2, type3, type4, mbti_type;
+var mbti;
 app.get('/', function (req, res) {
-  fs.readFile('youaregg.html', 'utf8', function (err, data) {
+  fs.readFile('index.html', 'utf8', function (err, data) {
+    if(nickname_success ==0){
+      data = data + "<script type='text/javascript'>alert('존재하지 않는 닉네임입니다.')</script>";
+      nickname_success = 1;
+    }
     res.end(data);
   })
 });
-
-app.post('/nickname_process', function (req, res) {
-  var body = '';
-  req.on('data', function (data) {
-    body = body + data;
-  });
-  req.on('end', function () {
-    var post = qs.parse(body);
-    nickname = post.nickname;
-    res.redirect('/question');
-  });
+app.get('/background', function (req, res) {
+  fs.readFile('main.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpeg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/assets/css/main.css', function (req, res) {
+  fs.readFile('assets/css/main.css', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'text/css'})
+      res.end(data) // Send the file data to the browser.
+});
 });
 
+app.get('/assets/css/font-awesome.min.css', function (req, res) {
+  fs.readFile('assets/css/font-awesome.min.css', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'text/css'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/pic01.jpg', function (req, res) {
+  fs.readFile('images/pic01.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/assets/js/jquery.min.js', function (req, res) {
+  fs.readFile('assets/js/jquery.min.js', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'text/script'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/assets/js/browser.min.js', function (req, res) {
+  fs.readFile('assets/js/browser.min.js', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'text/script'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/assets/js/breakpoints.min.js', function (req, res) {
+  fs.readFile('assets/js/breakpoints.min.js', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'text/script'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/assets/js/util.js', function (req, res) {
+  fs.readFile('assets/js/util.js', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'text/script'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/assets/js/main.js', function (req, res) {
+  fs.readFile('assets/js/main.js', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'text/script'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/assets/js/main.min.js', function (req, res) {
+  fs.readFile('assets/js/main.min.js', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'text/script'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/pic02.jpg', function (req, res) {
+  fs.readFile('images/pic02.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/pic03.jpg', function (req, res) {
+  fs.readFile('images/pic03.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/bg.jpg', function (req, res) {
+  fs.readFile('images/bg.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/banner.png', function (req, res) {
+  fs.readFile('images/banner.png', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/png'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/alter.png', function (req, res) {
+  fs.readFile('images/alter.png', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/png'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/cta01.jpg', function (req, res) {
+  fs.readFile('images/cta01.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/banner.mp4', function (req, res) {
+  fs.readFile('images/banner.mp4', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'video/mp4'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/gugbab.jpg', function (req, res) {
+  fs.readFile('images/gugbab.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/timo.jpg', function (req, res) {
+  fs.readFile('images/timo.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/trend.jpg', function (req, res) {
+  fs.readFile('images/trend.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/master.jpg', function (req, res) {
+  fs.readFile('images/master.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/images/compete.jpg', function (req, res) {
+  fs.readFile('images/compete.jpg', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'image/jpg'})
+      res.end(data) // Send the file data to the browser.
+});
+});
+app.get('/assets/fonts/fontawesome-webfont.woff2', function (req, res) {
+  fs.readFile('assets/fonts/fontawesome-webfont.woff2', function(err, data) {
+    if (err) throw err // Fail if the file can't be read.
+      res.writeHead(200, {'Content-Type': 'application/x-font-woff2'})
+      res.end(data) // Send the file data to the browser.
+});
+});
 app.get('/question', function (req, res) {
-  fs.readFile('question.html', 'utf8', function (err, data) {
+  fs.readFile('generic.html', 'utf8', function (err, data) {
     res.end(data);
   })
 });
-
-app.post('/question_process', function (req, res) {
-  var body = '';
-  req.on('data', function (data) {
-    body = body + data;
-  });
-  req.on('end', function () {
-    var post = qs.parse(body);
-    ext += Number(post.ext1);
-    ext += Number(post.ext2);
-    ext += Number(post.ext3);
-    sen += Number(post.sen1);
-    sen += Number(post.sen2);
-    sen += Number(post.sen3);
-    thi += Number(post.thi1);
-    thi += Number(post.thi2);
-    thi += Number(post.thi3);
-    thi += Number(post.thi4);
-    jud += Number(post.jud1);
-    jud += Number(post.jud2);
-    jud += Number(post.jud3);
-    mbti = [ext / 3, sen / 3, thi / 4, jud / 3];
-    res.redirect('/userinfo');
-  });
-});
-
 app.get('/userinfo', function (req, res) {
-  request(url_name(nickname, key), function (err, res_name, body_name) {
-    const userinfo = JSON.parse(body_name);
+    let mbti_text;
+    let mbti_recommend_text;
+    fs.readFile(`MBTI_sheet/${mbti_type}`, 'utf-8', function (err, data) {
+      mbti_text = (data);
+    });
+    fs.readFile(`MBTI_sheet/${mbti_type}R`, 'utf-8', function(err, data){
+      mbti_recommend_text = (data);
+    });
+    const userinfo = JSON.parse(userinfo_body);
     request(url_matchlist(userinfo.accountId, key), function (err, res_match, body_match) {
       let matchlist = JSON.parse(body_match);
       let total = matchlist.totalGames;
       let win_desire = 0;
       let gamemode_count = [0, 0, 0, 0, 0];//solo, free, normal, cold, event
+
 
       var total_champ_arr = [];
       var used_champ_arr = [];
@@ -1322,6 +1456,10 @@ app.get('/userinfo', function (req, res) {
       win_desire = (gamemode_count[0] + gamemode_count[1] * 0.7 + gamemode_count[2] * 0.3 + gamemode_count[3] * 0.1 + gamemode_count[4] * 0.1) / matchlist.matches.length * 10;
       for (var i = 0; i < 900; i++) if (total_champ_arr[i] != 0) used_champ_arr.push([i, total_champ_arr[i]]);
 
+
+
+
+
       used_champ_arr.sort(function (a, b) {
         return b[1] - a[1];
       });
@@ -1336,7 +1474,6 @@ app.get('/userinfo', function (req, res) {
       }
       let master_spirit;
       let master_param = (most_champ[0] * 1.3 + most_champ[1] * 1.2 + most_champ[2] * 1.1) / 10;
-      console.log(most_champ);
       if (master_param > 10) {
         master_param = 10;
       }
@@ -1355,20 +1492,21 @@ app.get('/userinfo', function (req, res) {
       if (master_spirit < 0) {
         master_spirit = 0;
       }
-      console.log(ext);
-      console.log(sen);
-      console.log(thi);
-      console.log(jud);
-
 
       mlist(used_champ_arr);
+
+      /*for (var i = 100; i < total; i += 100) {
+        request(url_matchlist_begin(userinfo.accountId, i, key), function(err, res_match_begin, body_match_begin){
+
+        })
+      }*/
 
       var resultlength;
       var characteristic = [0, 0, 0, 0, 0];
 
 
-      if (used_champ_arr.length > 20) {
-        resultlength = 20;
+      if (used_champ_arr.length > 15) {
+        resultlength = 15;
       }
       else {
         resultlength = used_champ_arr.length;
@@ -1381,74 +1519,95 @@ app.get('/userinfo', function (req, res) {
       }
       characteristic[3] = master_spirit;
       characteristic[4] = win_desire;
-      console.log(characteristic);
 
       var urlarray = []
       for (var i = 0; i < resultlength; i++) {
         urlarray.push(JSON.stringify(champarr[used_champ_arr[i][0]][1]));
       }
-
-
-      var for_user_data = `
-    <!doctype html>
-    <html>
-  
-  <head>
-    <title>YOUARE.GG</title>
-    <meta charset="utf-8">
-    <style>
-      body{
-        background-color: rgb(255, 255, 255);
-      }a{
-        color:rgb(86, 240, 219);
-        font-family: unset;
-        text-decoration: none;
-      }.box1{
-        background-color: rgb(255, 255, 255);
-        margin: 10px 10px 30px 10px;
-        height: 450px;
-      }.box2{
-        background-color: rgb(255, 255, 255);
-        margin: 10px 10px 30px 10px;
-        height: 500px;
-      }.box3{
-        background-color: rgb(255, 255, 255);
-        margin: 10px 10px 30px 10px;
-        height: 500px;
-      }.box4{
-        background-color: rgb(255, 255, 255);
-        margin: 10px 10px 30px 10px;
-        height: 450px;
-      }
-    </style>
-  </head>
-  
-  <body>
-    <h1><a href="/">YOUARE.GG</a></h1>
-    <h2>${nickname}님의 결과<h2>
-    <div class = "box1">
-      <h3> 1. MBTI 결과 </h3>
       
-    </div>
-
-    <div class = "box2">
-      <h3> 2. 최근 100 게임 사용 챔피언 그래프 </h3>
+      var for_user_data = `<!DOCTYPE HTML>
+      <!--
+         Industrious by TEMPLATED
+         templated.co @templatedco
+         Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+      -->
+      <html>
       
-    </div>
+      <head>
+        <title>LOL MBTI 분석 결과</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <link rel="stylesheet" href="assets/css/main.css" />
+      </head>
+      
+      <body class="is-preload">
+      
+        <!-- Header -->
+        <header id="header">
+          <a class="logo" href="./">LOL MBTI</a>
+        </header>
+      
+      
+        <!-- Heading -->
+				<div id="heading" style="height : 30rem !important; min-height : 30rem; 
+        background-image: linear-gradient(rgba(17, 17, 17, 0.25), rgba(17, 17, 17, 0.25)), url(../../images/alter.png);">
+          <h1>LOL MBTI / 플레이어 성향 분석 결과</h1>
+				</div>
+      
+      
+        <!-- Main -->
+        <section id="main" class="wrapper">
+          <div class="inner">
+            <header class="special">
+              <h2>MBTI 설문 결과와 사용 챔피언, 게임모드를 분석한 사용자의 성향</h2>
+            </header>
+            <div class="content">
+      
+                        <h2> 1. MBTI 결과 </h2>
+                        <div class = "box1">
+                        </div>
+                        <div id = "mbti_text" style = "font-size : 15px">
+                        ${mbti_text}
+                        </div>
+                        <hr>
+                        
+                        <h2> 2. 최근 100 게임 사용 챔피언 그래프 </h2>
+                        <div class = "box2">
+                        </div>
+                        <hr>
+                    
+                        <h2> 3. 최근 100 게임의 유형 </h2>
+                        <div class = "box3">
+                        </div>
+                        <hr>
+                    
+                        <h2> 4. MBTI 결과와 최근 100게임 분석을 통한 사용자 성향 </h2>
+                        <div class = "box4">
+                        </div>
+                        <hr>
+                    
+                        <h2> 5. 추천 챔피언 및 포지션 </h2>
+                        <div class = "box5">
+                        </div>
+                        <div id = "mbti_recommend_text" style="font-size : 30px;margin-top:50px;margin-left:3%">
+                        ${mbti_recommend_text}
+                        </div>
+      
+            </div>
+          </div>
+        </section>
 
-    <div class = "box3">
-      <h3> 3. 최근 100 게임의 유형 </h3>
-    </div>
-
-    <div class = "box4">
-      <h3> 4. MBTI 결과와 최근 100게임 분석을 통한 사용자 성향 </h3>
-    </div>
-
-    <div class = "box5">
-      <h3> 5. 추천 챔피언 및 포지션 </h3>
-    </div>
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/browser.min.js"></script>
+        <script src="assets/js/breakpoints.min.js"></script>
+        <script src="assets/js/util.js"></script>
+        <script src="assets/js/main.js"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script type="text/javascript">
+$("#mbti_text p#mbti_title").attr("style", "font-size : 30px; text-align : center; font-weight : bold");
+$("#mbti_text p#mbti_content").attr("style", "font-size : 20px; text-align : left");
 
 var svg = d3.select(".box1").append("svg")
     .attr('width', 1600)
@@ -1463,7 +1622,7 @@ svg.selectAll().data([${mbti}])
 .attr("y", 200)
 .text(function(d, i){
   if(i == 0){
-    if(d>5){
+    if(d>=5){
       mbti_which.push(0);
       return "I";
     }
@@ -1473,17 +1632,17 @@ svg.selectAll().data([${mbti}])
     }
   }
   if(i == 1){
-    if(d>5){
+    if(d>=5){
       mbti_which.push(0);
-      return "S";
+      return "N";
     }
     else{
       mbti_which.push(1);
-      return "N";
+      return "S";
     }
   }
   if(i == 2){
-    if(d>5){
+    if(d>=5){
       mbti_which.push(0);
     return "F";
     }
@@ -1493,7 +1652,7 @@ svg.selectAll().data([${mbti}])
     }
   }
   if(i == 3){
-    if(d>5){
+    if(d>=5){
       mbti_which.push(0);
     return "P";
     }
@@ -1506,23 +1665,60 @@ svg.selectAll().data([${mbti}])
 })
 .style("font-size", "40px");
 
-
+svg.selectAll().data([${mbti}]).enter()
+.append("circle")
+.attr("cx", 430)
+.attr("cy", function(d, i){
+  return 100 +15+ i*50})
+.attr("r", 15)
+.attr("fill", "#CE1B28")
+.attr("id", function(d,i){
+  return "left_circle"+i;
+})
 
 svg.selectAll().data([${mbti}]).enter()
+.append("circle")
+.attr("cx", 830)
+.attr("cy", function(d, i){
+  return 100 +15+ i*50})
+.attr("r", 15)
+.attr("fill", "#008220")
+.attr("id", function(d,i){
+  return "right_circle"+i;
+})
+svg.selectAll().data([${mbti}]).enter()
 .append("rect")
-.attr("x", 400)
+.attr("x", 430)
 .attr("y", function(d, i){
   return 100 + i*50})
 .attr("width", function(d){
   return d*40;
 })
 .attr("height", 30)
-.attr("fill", d3.rgb(140, 186, 255));
-
+.attr("fill", "#CE1B28")
+.on("mouseover", function(d, i){
+    $(this).attr("width", d*40 + 10)
+    $(this).attr("height", 30 + 10)
+    $(this).attr("x", 425)
+    $(this).attr("y", 100 + i*50 - 5)
+    $("#left_circle"+i).attr("r", 20).attr("cx", 425);
+    d3.select(this).raise()
+    d3.select(".box1 svg").append("text").text((d)*10+"%").attr("id", "tmp").attr("x", d3.mouse(this)[0]).attr("y",d3.mouse(this)[1]-30)
+    .style("font-size", "40px")
+})
+.on("mouseout", function(d, i){
+  $(this).attr("width", d*40)
+  $(this).attr("height", 30)
+  $(this).attr("x", 430)
+  $(this).attr("y", 100 + i*50)
+  $("#left_circle"+i).attr("r", 15).attr("cx", 430);
+  d3.select(this).lower()
+  $("#tmp").remove();
+});
 svg.selectAll().data([${mbti}]).enter()
     .append("rect")
     .attr("x", function(d){
-      return 400 + d*40;
+      return 430 + d*40;
     })
     .attr("y", function(d, i){
       return 100 + i*50})
@@ -1530,9 +1726,26 @@ svg.selectAll().data([${mbti}]).enter()
       return (10-d)*40;
     })
     .attr("height", 30)
-    .attr("fill", d3.rgb(116, 70, 1));
+    .attr("fill", "#008220")
+.on("mouseover", function(d, i){
+    $(this).attr("width", (10-d)*40 + 10)
+    $(this).attr("height", 30 + 10)
+    $(this).attr("x", 430 + d*40 - 5)
+    $(this).attr("y", 100 + i*50 -5)
+    d3.select(".box1 svg").append("text").text((10-d)*10+"%").attr("id", "tmp").attr("x", d3.mouse(this)[0]).attr("y",d3.mouse(this)[1]-30)
+    .style("font-size", "40px")
+    $("#right_circle"+i).attr("r", 20).attr("cx",835);
+})
+.on("mouseout", function(d, i){
+  $(this).attr("width", (10-d)*40)
+  $(this).attr("height", 30)
+  $(this).attr("x", 430 + d*40)
+  $(this).attr("y", 100 + i*50)
+  $("#right_circle"+i).attr("r", 15).attr("cx",830);
+  $("#tmp").remove();
+});
 
-svg.selectAll().data(["I(외향)","S(현실)","F(감정)","P(인식)"])
+svg.selectAll().data(["I(외향)","N(직관)","F(감정)","P(인식)"])
     .enter()
     .append("text")
     .attr("x", function(d, i){
@@ -1551,13 +1764,12 @@ svg.selectAll().data(["I(외향)","S(현실)","F(감정)","P(인식)"])
       else{
         return "normal"
       }
-
     });
-svg.selectAll().data(["E(외향)","N(직관)","T(사고)","J(판단)"])
+svg.selectAll().data(["E(외향)","S(현실)","T(사고)","J(판단)"])
     .enter()
     .append("text")
     .attr("x", function(d, i){
-      return 810;
+      return 880;
     })
     .attr("y", function(d, i){
       return 120 + i*50})
@@ -1579,17 +1791,17 @@ svg.selectAll().data(["E(외향)","N(직관)","T(사고)","J(판단)"])
 
 var svg = d3.select(".box2").append("svg")
         .attr('width', 1600)
-        .attr('height', 400)
+        .attr('height', 450)
 var tmp =[${used_champ_arr}];
 
 
 
 var dataset = [];
-if(tmp.length<40){
+if(tmp.length<30){
   var length = tmp.length;
 }
 else{
-  var length = 40;
+  var length = 30;
 }
 for(var i = 0; i<length; i++){
   if((i%2)==1){
@@ -1605,16 +1817,40 @@ svg.selectAll('rect')
       .enter()
       .append('rect')
       .attr('x', function(d, i){
-        return i*70+40
+        return i*70+20
       })
       .attr('y', function(d){
-        return 330 -d[1]*ratio; 
+        return 340 -d[1]*ratio; 
       })
       .attr('width', 30)
       .attr('height', function(d){
         return d[1]*ratio;
       })
-      .attr('fill', d3.rgb(140, 186, 255));
+      .attr('fill',"#CE1B28");
+svg.selectAll()
+      .data(dataset)
+      .enter()
+      .append('circle')
+      .attr('cx', function(d, i){
+        return i*70+20+15
+      })
+      .attr('cy', function(d){
+        return 340 -d[1]*ratio; 
+      })
+      .attr('r', 15)
+      .attr('fill',"#CE1B28");
+svg.selectAll()
+      .data(dataset)
+      .enter()
+      .append('circle')
+      .attr('cx', function(d, i){
+        return i*70+20+15
+      })
+      .attr('cy', function(d){
+        return 340; 
+      })
+      .attr('r', 15)
+      .attr('fill',"#CE1B28");
 var imgdataset = [${urlarray}];
 
 svg.selectAll('image')
@@ -1623,9 +1859,9 @@ svg.selectAll('image')
 .append('image')
 .attr("xlink:href", function(d){return d;})
 .attr('x', function(d, i){
-  return i*70+30
+  return i*70+10
 })
-.attr('y', 350)
+.attr('y', 375)
 .attr('width', 50)
 .attr('height', 50)
 
@@ -1635,7 +1871,7 @@ svg.selectAll('text')
 .enter()
 .append('text')
 .attr('x', function(d, i){
-  return i*70+49
+  return i*70+29
 })
 .attr('y',  function(d){
   return 320 -d[1]*ratio; 
@@ -1655,31 +1891,57 @@ for(var i = 0; i<5; i++){
     max_count = gamemode_count[i];
   }
 }
-var ratio = 300/max_count;
+var ratio = 800/max_count;
 svg.selectAll('rect')
     .data(gamemode_count)
     .enter()
     .append('rect')
     .attr('x', function(d, i){
-      return i*70+40
+      return 100;
     })
-    .attr('y', function(d){
-      return 330 -d*ratio; 
+    .attr('y', function(d, i){
+      return i*60+60; 
     })
-    .attr('width', 30)
+    .attr('width', function(d){
+      return d*ratio; })
     .attr('height', function(d){
-      return d*ratio;
+      return 30;
     })
-    .attr('fill', d3.rgb(140, 186, 255));
+    .attr('fill', "#CE1B28");
+svg.selectAll()
+    .data(gamemode_count)
+    .enter()
+    .append('circle')
+    .attr("cx", function(d, i){
+      return 100;
+    })
+    .attr("cy", function(d, i){
+      return i*60+75; 
+    })
+    .attr("r", "15")
+    .attr("fill", "#CE1B28")
 
+svg.selectAll()
+    .data(gamemode_count)
+    .enter()
+    .append('circle')
+    .attr("cx", function(d){
+      return 100 + d*ratio; })
+    .attr("cy", function(d, i){
+      return i*60+75; 
+    })
+    .attr("r", "15")
+    .attr("fill", "#CE1B28")
 svg.selectAll('text')
     .data(["솔랭","자랭","일반","칼바람","이벤트"])
     .enter()
     .append('text')
     .attr('x', function(d, i){
-      return i*70+30
+      return 15
     })
-    .attr('y', 350)
+    .attr('y',  function(d, i){
+      return i*60+85; 
+    })
     .text(function(d){
       return d;
     })
@@ -1691,10 +1953,10 @@ svg.selectAll()
     .enter()
     .append('text')
     .attr('x', function(d, i){
-      return i*70+49
+      return 130+d*ratio
     })
-    .attr('y',  function(d){
-      return 320 -d*ratio; 
+    .attr('y',  function(d, i){
+      return i*60+82; 
     })
     .text(function(d){
       return d;
@@ -1790,7 +2052,7 @@ svg.selectAll()
 .append('text')
 .attr('x', function(d, i){
   if(i == 0){
-  return d[0]-40
+  return d[0]-20
   }
   if(i == 1){
     return d[0]
@@ -1805,12 +2067,12 @@ svg.selectAll()
     }
     
   if(i == 4){
-    return d[0]- 95
+    return d[0]- 65
     }
 })
 .attr('y',  function(d, i){
   if(i == 0){
-  return d[1]-10
+  return d[1]-5
   }
   if(i == 1){
     return d[1]
@@ -1853,6 +2115,8 @@ svg.selectAll()
 .style("font-size", "20px")
 .style("font-weight", "normal");
 
+$("rect").attr("opacity", "1");
+
 </script>
 
   </body>
@@ -1861,8 +2125,86 @@ svg.selectAll()
     `;
       res.end(for_user_data);
     }); // requset matchlist
-  }); // requeset accountId
 
+});
+app.post('/nickname_process', function (req, res) {
+  var body = '';
+  req.on('data', function (data) {
+    body = body + data;
+  });
+  req.on('end', function () {
+    var post = qs.parse(body);
+    nickname = post.nickname;
+    
+  request(url_name(nickname, key), function (err, res_name, body_name) {
+    if(res_name.statusCode == 200){
+      nickname_success = 1;
+      userinfo_body = body_name;
+      res.redirect('/question');
+    }
+    else{
+      nickname_success = 0;
+      res.redirect('/');
+    }
+  })
+  });
+});
+
+app.post('/question_process', function (req, res) {
+  var body = '';
+  ext = 0;
+  sen = 0;
+  thi = 0;
+  jud = 0;
+  mbti = [];
+  req.on('data', function (data) {
+    body = body + data;
+  });
+  req.on('end', function () {
+    var post = qs.parse(body);
+    ext += Number(post.ext1);
+    ext += Number(post.ext2);
+    ext += Number(post.ext3);
+    sen += Number(post.sen1);
+    sen += Number(post.sen2);
+    sen += Number(post.sen3);
+    thi += Number(post.thi1);
+    thi += Number(post.thi2);
+    thi += Number(post.thi3);
+    jud += Number(post.jud1);
+    jud += Number(post.jud2);
+    jud += Number(post.jud3);
+    mbti = [ext / 3, sen / 3, thi / 3, jud / 3];
+
+    {// mbti type 결정
+      if(mbti[0] >= 5){ // 5점 이상이면 내향형(I)
+        type1 = "I";
+      }
+      else{
+        type1 = "E";
+      }
+      if(mbti[1] >= 5){ // 5점 이상이면 직관형(N)
+        type2 = "N";
+      }
+      else{
+        type2 = "S";
+      }
+      if(mbti[2] >= 5){ // 5점 이상이면 감정형(F)
+        type3 = "F";
+      }
+      else{
+        type3 = "T";
+      }
+      if(mbti[3] >= 5){ // 5점 이상이면 인식(즉흥)형(P)
+        type4 = "P";
+      }
+      else{
+        type4 = "J";
+      }
+    }
+    mbti_type = type1 + type2 + type3 + type4;
+    res.redirect('/userinfo');
+  });
 });
 
 app.listen(3000, function () {
